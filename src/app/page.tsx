@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import Search from '~/components/search'
 import ImageGrid from '~/components/image-grid'
+import Img from '~/components/image'
 
 export default function Home() {
   const [query, setQuery] = useState('')
@@ -29,6 +30,12 @@ export default function Home() {
         </div>
 
         <div className="mt-4 ml-20 w-[600px]">
+          <Img
+            src="https://placehold.co/180"
+            alt="Lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
+            onClick={() => {}}
+          />
+
           <ImageGrid />
         </div>
       </div>

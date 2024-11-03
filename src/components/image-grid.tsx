@@ -10,7 +10,7 @@ const ImageGrid = () => {
       {[...Array(5)].map((_, index) => (
         <div
           key={index}
-          className="relative z-0 hover:z-10 first:col-start-2 first:col-span-3 last:col-span-3 last:col-start-2"
+          className="relative first:col-start-2 first:col-span-3 last:col-span-3 last:col-start-2"
         >
           <Img
             src="https://placehold.co/180"
