@@ -3,14 +3,21 @@ import Draggable from 'react-draggable'
 
 export type Action = 'ADD' | 'REMOVE' | 'GENERATE'
 
+export type ImageDragging = {
+  dragging: boolean
+  index: number
+}
+
 type ImageProps = {
   src: string
   alt: string
+  index?: number
 
   onClick: (action: Action) => void
+  setDragState?: (drag: ImageDragging) => void
 }
 
-const Img = ({ src, alt, onClick }: ImageProps) => {
+const Img = ({ src, alt, index, onClick, setDragState }: ImageProps) => {
   const nodeRef = useRef(null)
 
   const [isDragging, setIsDragging] = useState(false)
@@ -19,7 +26,7 @@ const Img = ({ src, alt, onClick }: ImageProps) => {
     {
       icon: '+',
       onClick: () => onClick('ADD'),
-      className: 'leading-5',
+      className: 'leading-none pt-[2.5px]',
     },
     {
       icon: '-',
@@ -31,21 +38,26 @@ const Img = ({ src, alt, onClick }: ImageProps) => {
     },
   ]
 
+  const handleDrag = (dragging: boolean, currentDragging: boolean, index?: number) => {
+    // Prevent unnecessary re-renders. check if the dragging state has changed
+    if (currentDragging === dragging) return
+
+    setIsDragging(dragging)
+
+    if (setDragState && index !== undefined) {
+      setDragState({ dragging, index })
+    }
+  }
+
   return (
     <Draggable
       nodeRef={nodeRef}
-      onDrag={() => setIsDragging(true)}
-      onStop={() => setIsDragging(false)}
+      onDrag={() => handleDrag(true, isDragging, index)}
+      onStop={() => handleDrag(false, isDragging, index)}
     >
-      <div ref={nodeRef} className="group w-[180px] h-[180px] hover:cursor-grab">
-        <div
-          className={`relative w-full h-full ring-4 bg-red-100 ${isDragging ? 'ring-violet-500' : 'ring-gray-300'}`}
-        >
+      <div ref={nodeRef} className="relative group w-[180px] h-[180px] hover:cursor-grab">
+        <div className={`w-full h-full ring-4 ${isDragging ? 'ring-violet-500' : 'ring-gray-300'}`}>
           <img src={src} alt={alt} className="w-full h-full object-cover" />
-
-          <p className="w-[186px] px-2 py-1 absolute top-[186px] left-0 text-white font-medium text-center bg-neutral-600 text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            {alt}
-          </p>
         </div>
 
         <div className="absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
@@ -53,7 +65,7 @@ const Img = ({ src, alt, onClick }: ImageProps) => {
             <div
               key={action.icon}
               onClick={action.onClick}
-              className={`w-6 h-6 bg-black/50 rounded-full text-white font-bold text-center cursor-pointer hover:bg-black/75 ${
+              className={`w-6 h-6 bg-black/50 rounded-full text-white font-bold text-center hover:cursor-pointer hover:bg-black/75 ${
                 action.className ? action.className : ''
               }`}
             >
@@ -61,6 +73,10 @@ const Img = ({ src, alt, onClick }: ImageProps) => {
             </div>
           ))}
         </div>
+
+        <p className="w-[186px] px-2 py-1 absolute top-[186px] left-0 text-white font-medium text-center bg-neutral-600 text-sm rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {alt}
+        </p>
 
         <div className="absolute top-0 left-0 w-[180px] h-[180px] z-10" />
       </div>
