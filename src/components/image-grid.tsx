@@ -14,7 +14,7 @@ const ImageGrid = () => {
         >
           <Img
             src="https://placehold.co/180"
-            alt="Lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
+            alt={`${index + 1} Lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet`}
             onClick={(action: Action) => onImageClick(action, index)}
           />
         </div>

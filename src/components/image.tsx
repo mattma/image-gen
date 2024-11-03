@@ -39,7 +39,7 @@ const Img = ({ src, alt, onClick }: ImageProps) => {
     >
       <div ref={nodeRef} className="group w-[180px] h-[180px] hover:cursor-grab">
         <div
-          className={`relative w-full h-full ring-4 bg-red-100 ${isDragging ? 'ring-violet-300' : 'ring-gray-300'}`}
+          className={`relative w-full h-full ring-4 bg-red-100 ${isDragging ? 'ring-violet-500' : 'ring-gray-300'}`}
         >
           <img src={src} alt={alt} className="w-full h-full object-cover" />
 
