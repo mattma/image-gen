@@ -1,12 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { useShallow } from 'zustand/shallow'
+
+import { useAppStore } from '~/stores/app'
 
 import Search from '~/components/search'
 import ImageGrid from '~/components/image-grid'
 import Img from '~/components/image'
+import Gallery from '~/components/gallery'
 
 export default function Home() {
+  const [girds] = useAppStore(useShallow((state) => [state.grids]))
+
   const [query, setQuery] = useState('')
 
   const handleArrange = () => {
@@ -28,16 +34,20 @@ export default function Home() {
             Arrange in Grid
           </button>
         </div>
+      </div>
 
-        <div className="mt-4 ml-20 w-[600px]">
-          <Img
-            src="https://placehold.co/180"
-            alt="Lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
-            onClick={() => {}}
-          />
+      <div className="mt-4 ml-20 w-[600px]">
+        <Img
+          src="https://placehold.co/180"
+          alt="Lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
+          onClick={() => {}}
+        />
 
-          <ImageGrid />
-        </div>
+        <ImageGrid />
+      </div>
+
+      <div className="mt-4 mx-8">
+        <Gallery grids={girds} />
       </div>
     </>
   )
