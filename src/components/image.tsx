@@ -1,6 +1,8 @@
 import { useRef, useState } from 'react'
 import Draggable from 'react-draggable'
 
+import type { ImageGen } from '~/stores/app'
+
 export type Action = 'ADD' | 'REMOVE' | 'GENERATE'
 
 export type ImageDragging = {
@@ -8,9 +10,7 @@ export type ImageDragging = {
   index: number
 }
 
-type ImageProps = {
-  src: string
-  alt: string
+interface ImageProps extends ImageGen {
   index?: number
 
   onClick: (action: Action) => void
