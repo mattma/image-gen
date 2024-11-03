@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import Search from '~/components/search'
+import ImageGrid from '~/components/image-grid'
 
 export default function Home() {
   const [query, setQuery] = useState('')
@@ -20,11 +21,15 @@ export default function Home() {
           <Search query={query} setQuery={setQuery} />
 
           <button
-            className="block px-4 py-2 bg-gradient-to-r from-violet-700 to-indigo-500 text-white ring-1 ring-inset ring-white/20 rounded-md font-medium"
+            className="block px-4 py-2 bg-gradient-to-r from-violet-700 to-blue-500 text-white ring-1 ring-inset ring-white/20 rounded-md font-medium"
             onClick={handleArrange}
           >
             Arrange in Grid
           </button>
+        </div>
+
+        <div className="mt-4">
+          <ImageGrid />
         </div>
       </div>
     </>
