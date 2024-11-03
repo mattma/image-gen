@@ -25,7 +25,7 @@ const Img = ({ src, alt, onClick }: ImageProps) => {
   ]
 
   return (
-    <div className="group relative w-[180px] h-[180px]">
+    <div className="group relative w-[180px] h-[180px] ring-4 ring-gray-300">
       <img src={src} alt={alt} className="w-full h-full object-cover  hover:cursor-grabbing" />
 
       <div className="absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">

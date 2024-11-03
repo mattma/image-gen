@@ -28,7 +28,7 @@ export default function Home() {
           </button>
         </div>
 
-        <div className="mt-4">
+        <div className="mt-4 ml-20 w-[600px]">
           <ImageGrid />
         </div>
       </div>
