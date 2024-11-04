@@ -6,7 +6,7 @@ import type { ImageGen } from '~/stores/app'
 export type Action = 'ADD' | 'REMOVE' | 'GENERATE'
 
 export type ImageDragging = {
-  dragging: boolean
+  hover: boolean
   index: number
 }
 
@@ -14,13 +14,11 @@ interface ImageProps extends ImageGen {
   index?: number
 
   onClick: (action: Action) => void
-  setDragState?: (drag: ImageDragging) => void
+  setHoverState?: (drag: ImageDragging) => void
 }
 
-const Img = ({ src, alt, index, onClick, setDragState }: ImageProps) => {
+const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
   const nodeRef = useRef(null)
-
-  const [isDragging, setIsDragging] = useState(false)
 
   const [isFavorite, setIsFavorite] = useState(false)
 
@@ -40,25 +38,21 @@ const Img = ({ src, alt, index, onClick, setDragState }: ImageProps) => {
     },
   ]
 
-  const handleDrag = (dragging: boolean, currentDragging: boolean, index?: number) => {
-    // Prevent unnecessary re-renders. check if the dragging state has changed
-    if (currentDragging === dragging) return
-
-    setIsDragging(dragging)
-
-    if (setDragState && index !== undefined) {
-      setDragState({ dragging, index })
+  const handleMouseAction = (hover: boolean) => {
+    if (setHoverState && index !== undefined) {
+      setHoverState({ hover, index })
     }
   }
 
   return (
-    <Draggable
-      nodeRef={nodeRef}
-      onDrag={() => handleDrag(true, isDragging, index)}
-      onStop={() => handleDrag(false, isDragging, index)}
-    >
-      <div ref={nodeRef} className="relative group w-[180px] h-[180px] hover:cursor-grab">
-        <div className={`w-full h-full ring-4 ${isDragging ? 'ring-violet-500' : 'ring-gray-300'}`}>
+    <Draggable nodeRef={nodeRef}>
+      <div
+        ref={nodeRef}
+        className="relative group w-[180px] h-[180px] hover:cursor-grab"
+        onMouseEnter={() => handleMouseAction(true)}
+        onMouseLeave={() => handleMouseAction(false)}
+      >
+        <div className="w-full h-full ring-4 ring-gray-300 group-hover:ring-violet-500">
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
 
