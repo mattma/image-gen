@@ -11,11 +11,12 @@ import Img from '~/components/image'
 import Gallery from '~/components/gallery'
 
 export default function Home() {
-  const [girds, tempImageGrids, setGrids, removeTempImage] = useAppStore(
+  const [girds, tempImageGrids, setGrids, addTempImage, removeTempImage] = useAppStore(
     useShallow((state) => [
       state.grids,
       state.tempImageGrids,
       state.setGrids,
+      state.addTempImage,
       state.removeTempImage,
     ]),
   )
@@ -66,6 +67,7 @@ export default function Home() {
               key={key}
               id={key}
               grids={tempImageGrids[key]}
+              addTempImage={addTempImage}
               removeTempImage={removeTempImage}
             />
           ))}

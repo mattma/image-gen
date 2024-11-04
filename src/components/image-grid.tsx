@@ -4,31 +4,34 @@ import type { ImageGen } from '~/stores/app'
 
 import Img, { type Action, type ImageHoverState } from '~/components/image'
 
-import { removeImage } from '~/utils/image-action'
+import { addImage, removeImage, generateImage } from '~/utils/image-action'
 
 interface ImageGridProps {
   id: string
   grids: ImageGen[]
 
+  addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
 }
 
-const ImageGrid = ({ id, grids, removeTempImage }: ImageGridProps) => {
+const ImageGrid = ({ id, grids, addTempImage, removeTempImage }: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
   const onImageClick = (action: Action, index: number) => {
     switch (action) {
       case 'ADD':
-        console.log('add')
+        const addData = addImage(grids[index])
+        addTempImage(addData)
         break
 
       case 'REMOVE':
-        const data = removeImage(index, grids)
-        removeTempImage(id, data)
+        const removeData = removeImage(index, grids)
+        removeTempImage(id, removeData)
         break
 
       case 'GENERATE':
-        console.log('generate')
+        const generateData = generateImage(id, index, grids)
+        addTempImage(generateData, id)
         break
     }
   }

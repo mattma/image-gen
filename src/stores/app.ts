@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-// import { v4 as uuid } from 'uuid'
 
 export type ImageGen = {
   src: string
@@ -18,7 +17,7 @@ const temp: ImageGen[] = [
   },
   {
     src: 'https://placehold.co/180',
-    alt: 'Lorem ipsum dolor sit amet',
+    alt: 'center image',
   },
   {
     src: 'https://placehold.co/180',
@@ -26,7 +25,7 @@ const temp: ImageGen[] = [
   },
   {
     src: 'https://placehold.co/180',
-    alt: 'Lorem ipsum dolor sit amet',
+    alt: 'Last image',
   },
 ]
 
@@ -35,8 +34,8 @@ export interface AppProps {
   tempImageGrids: Record<string, ImageGen[]>
 
   setGrids: (grids: ImageGen[], emptyTempImageGrids?: boolean) => void
+  addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
-  setTempImageGrids: (grids: Record<string, ImageGen[]>) => void
 }
 
 // Redux Devtools enabled for debugging
@@ -63,6 +62,14 @@ export const useAppStore = create<AppProps>()(
         }
       }),
 
+    addTempImage: (data: Record<string, ImageGen[]>, id?: string) =>
+      set(() => {
+        const latest = get()
+        const tempImageGrids = { ...latest.tempImageGrids, ...data }
+
+        return { tempImageGrids }
+      }),
+
     removeTempImage: (id: string, grids: ImageGen[] | null) =>
       set(() => {
         const latest = get()
@@ -76,7 +83,5 @@ export const useAppStore = create<AppProps>()(
 
         return { tempImageGrids: tempImageGrids ?? {} }
       }),
-
-    setTempImageGrids: (g: Record<string, ImageGen[]>) => set({ tempImageGrids: g }),
   })),
 )
