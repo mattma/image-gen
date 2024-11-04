@@ -11,8 +11,13 @@ import Img from '~/components/image'
 import Gallery from '~/components/gallery'
 
 export default function Home() {
-  const [girds, tempImageGrids, setGrids] = useAppStore(
-    useShallow((state) => [state.grids, state.tempImageGrids, state.setGrids]),
+  const [girds, tempImageGrids, setGrids, removeTempImage] = useAppStore(
+    useShallow((state) => [
+      state.grids,
+      state.tempImageGrids,
+      state.setGrids,
+      state.removeTempImage,
+    ]),
   )
 
   const [query, setQuery] = useState('')
@@ -56,7 +61,14 @@ export default function Home() {
         />
 
         {tempImageGridsKeys.length > 0 &&
-          tempImageGridsKeys.map((key) => <ImageGrid key={key} grids={tempImageGrids[key]} />)}
+          tempImageGridsKeys.map((key) => (
+            <ImageGrid
+              key={key}
+              id={key}
+              grids={tempImageGrids[key]}
+              removeTempImage={removeTempImage}
+            />
+          ))}
       </div>
 
       <div className="mt-4 mx-8">

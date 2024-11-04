@@ -35,6 +35,7 @@ export interface AppProps {
   tempImageGrids: Record<string, ImageGen[]>
 
   setGrids: (grids: ImageGen[], emptyTempImageGrids?: boolean) => void
+  removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setTempImageGrids: (grids: Record<string, ImageGen[]>) => void
 }
 
@@ -47,7 +48,7 @@ export const useAppStore = create<AppProps>()(
       '2b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed': [
         {
           src: 'https://placehold.co/180',
-          alt: 'Lorem ipsum dolor sit amet',
+          alt: 'testing for a single image',
         },
       ],
     },
@@ -60,6 +61,20 @@ export const useAppStore = create<AppProps>()(
           grids: [...latest.grids, ...g],
           tempImageGrids: emptyTempImageGrids ? {} : latest.tempImageGrids,
         }
+      }),
+
+    removeTempImage: (id: string, grids: ImageGen[] | null) =>
+      set(() => {
+        const latest = get()
+        const tempImageGrids = { ...latest.tempImageGrids }
+
+        if (grids) {
+          tempImageGrids[id] = grids
+        } else {
+          delete tempImageGrids[id]
+        }
+
+        return { tempImageGrids: tempImageGrids ?? {} }
       }),
 
     setTempImageGrids: (g: Record<string, ImageGen[]>) => set({ tempImageGrids: g }),

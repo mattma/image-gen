@@ -5,7 +5,7 @@ import type { ImageGen } from '~/stores/app'
 
 export type Action = 'ADD' | 'REMOVE' | 'GENERATE'
 
-export type ImageDragging = {
+export type ImageHoverState = {
   hover: boolean
   index: number
 }
@@ -14,7 +14,7 @@ interface ImageProps extends ImageGen {
   index?: number
 
   onClick: (action: Action) => void
-  setHoverState?: (drag: ImageDragging) => void
+  setHoverState?: (drag: ImageHoverState) => void
 }
 
 const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
