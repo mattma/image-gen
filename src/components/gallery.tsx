@@ -53,7 +53,7 @@ const Gallery = ({ grids, addTempImage, setGrids, setFavorites }: GalleryProps) 
       {grids.length > 0 ? (
         <div className="relative flex flex-wrap gap-4">
           {grids.map((grid, index) => (
-            <div key={index} className="z-0 hover:z-50">
+            <div key={grid.id} className="z-0 hover:z-50">
               <Img {...grid} onClick={(action: Action) => onImageClick(action, index)} />
             </div>
           ))}

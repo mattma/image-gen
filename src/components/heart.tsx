@@ -1,15 +1,17 @@
 type HeartProps = {
   isFavorite: boolean
+  className?: string
 
   setFavorite: () => void
 }
 
-const Heart = ({ isFavorite, setFavorite }: HeartProps) => {
+const Heart = ({
+  isFavorite,
+  className = 'absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300',
+  setFavorite,
+}: HeartProps) => {
   return (
-    <div
-      className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 hover:cursor-pointer transition-opacity duration-300"
-      onClick={setFavorite}
-    >
+    <div className={`hover:cursor-pointer ${className}`} onClick={setFavorite}>
       <svg
         width="24"
         height="24"

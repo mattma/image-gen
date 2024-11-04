@@ -49,7 +49,7 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage, setFavorites }: I
     <div className="w-[600px] grid grid-cols-3 gap-4">
       {grids.map((image, index) => (
         <div
-          key={index}
+          key={image.id}
           className={`relative first:col-start-2 first:col-span-2 [&:nth-child(2)]:col-start-1 [&:nth-child(3)]:col-start-2 [&:nth-child(4)]:col-start-3 last:col-start-2 last:col-span-1 ${hoverState.hover && index === hoverState.index ? 'z-50' : 'z-0'}`}
         >
           {image.src !== '' && (

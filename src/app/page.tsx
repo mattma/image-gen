@@ -55,7 +55,7 @@ export default function Home() {
             <h3 className="mb-2 pl-4 text-sm font-medium tracking-tight  text-gray-700">
               Favorites ({favorites.length})
             </h3>
-            <Favorites favorites={favorites} />
+            <Favorites favorites={favorites} setFavorites={setFavorites} />
           </div>
         </div>
       </aside>

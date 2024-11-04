@@ -44,19 +44,6 @@ const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps
     }
   }
 
-  const setFavorite = () => {
-    // const favorites = JSON.parse(window.localStorage.getItem('favorites') ?? '[]')
-    // let newFavorites = [...(favorites ?? [])]
-    // if (isFavorite) {
-    //   newFavorites = newFavorites.filter((favorite) => favorite.src !== src)
-    // } else {
-    //   newFavorites.push({ src, alt })
-    // }
-    // window.localStorage.setItem('favorites', JSON.stringify(newFavorites))
-    // setIsFavorite(!isFavorite)
-    onClick('FAVORITE')
-  }
-
   return (
     <Draggable nodeRef={nodeRef}>
       <div
@@ -69,7 +56,7 @@ const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
 
-        <Heart isFavorite={isFavorite} setFavorite={setFavorite} />
+        <Heart isFavorite={isFavorite} setFavorite={() => onClick('FAVORITE')} />
 
         <div className="absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
           {actions.map((action) => (

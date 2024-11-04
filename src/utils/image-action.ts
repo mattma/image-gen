@@ -15,7 +15,7 @@ export function removeImage(index: number, grids: ImageGen[]): ImageGen[] | null
   let ret = null
 
   if (size === 5) {
-    grids.splice(index, 1, { src: '', alt: '' })
+    grids.splice(index, 1, { id: uuid(), src: '', alt: '', isFavorite: false })
 
     // since the image src can be empty, remove the entire grid
     const filteredGrids = grids.filter((grid) => grid.src !== '')
@@ -27,8 +27,10 @@ export function removeImage(index: number, grids: ImageGen[]): ImageGen[] | null
 
 function generate(count: number): ImageGen[] {
   return Array.from({ length: count }, () => ({
+    id: uuid(),
     src: 'https://placehold.co/180',
     alt: 'generated',
+    isFavorite: false,
   }))
 }
 
@@ -64,7 +66,7 @@ export function updateFavoriteList(favorites: ImageGen[], currentFavorite: Image
   if (currentFavorite.isFavorite) {
     newFavorites.push(currentFavorite)
   } else {
-    newFavorites = newFavorites.filter((favorite) => favorite.src !== currentFavorite.src)
+    newFavorites = newFavorites.filter((favorite) => favorite.id !== currentFavorite.id)
   }
 
   return newFavorites
