@@ -91,17 +91,21 @@ export default function Home() {
         </div>
 
         <div className="h-[60%] bg-gray-100">
-          {tempImageGridsKeys.length > 0 &&
-            tempImageGridsKeys.map((key) => (
-              <ImageGrid
-                key={key}
-                id={key}
-                grids={tempImageGrids[key]}
-                addTempImage={addTempImage}
-                removeTempImage={removeTempImage}
-                setFavorites={setFavorites}
-              />
-            ))}
+          {tempImageGridsKeys.length > 0 && (
+            <div className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
+              {tempImageGridsKeys.map((key, level) => (
+                <ImageGrid
+                  key={key}
+                  id={key}
+                  level={level}
+                  grids={tempImageGrids[key]}
+                  addTempImage={addTempImage}
+                  removeTempImage={removeTempImage}
+                  setFavorites={setFavorites}
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="">

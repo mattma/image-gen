@@ -3,9 +3,13 @@ import { v4 as uuid } from 'uuid'
 import type { ImageGen } from '~/stores/app'
 
 export function addImage(image: ImageGen): Record<string, ImageGen[]> {
-  const id = uuid()
+  const gridId = uuid()
+  const imageId = uuid()
 
-  return { [id]: [{ ...image, id: uuid(), isFavorite: false }] }
+  console.log('gridId', gridId)
+  console.log('imageId', imageId)
+
+  return { [gridId]: [{ ...image, id: imageId, isFavorite: false }] }
 }
 
 // if the grids size is 5, remove the image and return the new grids
@@ -35,10 +39,12 @@ function generate(count: number): ImageGen[] {
 }
 
 export function generateImage(
-  id: string | null = uuid(),
+  id: string | null,
   index: number,
   grids: ImageGen[],
 ): Record<string, ImageGen[]> {
+  id = id ?? uuid() // if id is null, generate a new uuid for grid id
+
   const size = grids.length
   let ret = {}
 

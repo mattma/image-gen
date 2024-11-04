@@ -1,5 +1,5 @@
-import { useRef } from 'react'
-import Draggable from 'react-draggable'
+import { useRef, useState } from 'react'
+import Draggable, { type DraggableData, type DraggableEvent } from 'react-draggable'
 
 import type { ImageGen } from '~/stores/app'
 
@@ -21,6 +21,9 @@ interface ImageProps extends ImageGen {
 
 const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps) => {
   const nodeRef = useRef(null)
+
+  // Track the position in state
+  const [position, setPosition] = useState({ x: 0, y: 0 })
 
   const actions = [
     {
@@ -44,8 +47,13 @@ const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps
     }
   }
 
+  // Update position when dragging stops
+  const handleStop = (_e: DraggableEvent, data: DraggableData) => {
+    setPosition({ x: data.x, y: data.y })
+  }
+
   return (
-    <Draggable nodeRef={nodeRef}>
+    <Draggable nodeRef={nodeRef} position={position} onStop={handleStop}>
       <div
         ref={nodeRef}
         className="relative group w-[180px] h-[180px] hover:cursor-grab"

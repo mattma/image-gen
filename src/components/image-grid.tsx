@@ -9,13 +9,21 @@ import { addImage, removeImage, generateImage } from '~/utils/image-action'
 interface ImageGridProps {
   id: string
   grids: ImageGen[]
+  level: number
 
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setFavorites: (favorite: ImageGen) => void
 }
 
-const ImageGrid = ({ id, grids, addTempImage, removeTempImage, setFavorites }: ImageGridProps) => {
+const ImageGrid = ({
+  id,
+  grids,
+  level,
+  addTempImage,
+  removeTempImage,
+  setFavorites,
+}: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
   const onImageClick = (action: Action, index: number) => {
@@ -46,11 +54,15 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage, setFavorites }: I
   }
 
   return (
-    <div className="w-[600px] grid grid-cols-3 gap-4">
+    <>
       {grids.map((image, index) => (
         <div
           key={image.id}
-          className={`relative first:col-start-2 first:col-span-2 [&:nth-child(2)]:col-start-1 [&:nth-child(3)]:col-start-2 [&:nth-child(4)]:col-start-3 last:col-start-2 last:col-span-1 ${hoverState.hover && index === hoverState.index ? 'z-50' : 'z-0'}`}
+          className={`relative [&:nth-child(5n+1)]:col-start-2 [&:nth-child(5n+1)]:col-span-2 [&:nth-child(5n+2)]:col-start-1 [&:nth-child(5n+3)]:col-start-2 [&:nth-child(5n+4)]:col-start-3 [&:nth-child(5n)]:col-start-2 [&:nth-child(5n)]:col-span-1 ${hoverState.hover && index === hoverState.index ? 'z-50' : 'z-0'}`}
+          style={{
+            top: `-${560 * level}px`,
+            left: `${30 * level}px`,
+          }}
         >
           {image.src !== '' && (
             <Img
@@ -62,7 +74,7 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage, setFavorites }: I
           )}
         </div>
       ))}
-    </div>
+    </>
   )
 }
 
