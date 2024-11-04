@@ -2,7 +2,8 @@ import { useState } from 'react'
 
 import type { ImageGen } from '~/stores/app'
 
-import Img, { type Action, type ImageHoverState } from '~/components/image'
+import type { Action, ImageHoverState } from '~/components/image'
+import ImageGridItem from '~/components/image-grid-item'
 
 import { addImage, removeImage, generateImage } from '~/utils/image-action'
 
@@ -56,23 +57,15 @@ const ImageGrid = ({
   return (
     <>
       {grids.map((image, index) => (
-        <div
+        <ImageGridItem
           key={image.id}
-          className={`relative [&:nth-child(5n+1)]:col-start-2 [&:nth-child(5n+1)]:col-span-2 [&:nth-child(5n+2)]:col-start-1 [&:nth-child(5n+3)]:col-start-2 [&:nth-child(5n+4)]:col-start-3 [&:nth-child(5n)]:col-start-2 [&:nth-child(5n)]:col-span-1 ${hoverState.hover && index === hoverState.index ? 'z-50' : 'z-0'}`}
-          style={{
-            top: `-${560 * level}px`,
-            left: `${30 * level}px`,
-          }}
-        >
-          {image.src !== '' && (
-            <Img
-              {...image}
-              index={index}
-              onClick={(action: Action) => onImageClick(action, index)}
-              setHoverState={setHoverState}
-            />
-          )}
-        </div>
+          image={image}
+          index={index}
+          level={level}
+          hoverState={hoverState}
+          onImageClick={onImageClick}
+          setHoverState={setHoverState}
+        />
       ))}
     </>
   )

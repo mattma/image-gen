@@ -17,9 +17,18 @@ interface ImageProps extends ImageGen {
 
   onClick: (action: Action) => void
   setHoverState?: (drag: ImageHoverState) => void
+  handleStopPosition?: (position: { x: number; y: number }) => void
 }
 
-const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps) => {
+const Img = ({
+  src,
+  alt,
+  isFavorite,
+  index,
+  onClick,
+  setHoverState,
+  handleStopPosition,
+}: ImageProps) => {
   const nodeRef = useRef(null)
 
   // Track the position in state
@@ -49,7 +58,13 @@ const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps
 
   // Update position when dragging stops
   const handleStop = (_e: DraggableEvent, data: DraggableData) => {
-    setPosition({ x: data.x, y: data.y })
+    // if handleStopPosition is defined, parent will handle the position
+    // otherwise, set the position in state to manage by the draggable component
+    if (handleStopPosition) {
+      handleStopPosition({ x: data.x, y: data.y })
+    } else {
+      setPosition({ x: data.x, y: data.y })
+    }
   }
 
   return (

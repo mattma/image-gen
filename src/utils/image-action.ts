@@ -6,9 +6,6 @@ export function addImage(image: ImageGen): Record<string, ImageGen[]> {
   const gridId = uuid()
   const imageId = uuid()
 
-  console.log('gridId', gridId)
-  console.log('imageId', imageId)
-
   return { [gridId]: [{ ...image, id: imageId, isFavorite: false }] }
 }
 
