@@ -1,6 +1,11 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+export type SetGridOptions = {
+  replace?: boolean
+  emptyTempImageGrids?: boolean
+}
+
 export type ImageGen = {
   src: string
   alt: string
@@ -33,8 +38,8 @@ export interface AppProps {
   grids: ImageGen[]
   tempImageGrids: Record<string, ImageGen[]>
 
-  setGrids: (grids: ImageGen[], emptyTempImageGrids?: boolean) => void
-  addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
+  setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
+  addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
 }
 
@@ -52,17 +57,17 @@ export const useAppStore = create<AppProps>()(
       ],
     },
 
-    setGrids: (g: ImageGen[], emptyTempImageGrids = false) =>
+    setGrids: (newGrids: ImageGen[], options?: SetGridOptions) =>
       set(() => {
         const latest = get()
 
         return {
-          grids: [...latest.grids, ...g],
-          tempImageGrids: emptyTempImageGrids ? {} : latest.tempImageGrids,
+          grids: options?.replace ? newGrids : [...latest.grids, ...newGrids],
+          tempImageGrids: options?.emptyTempImageGrids ? {} : latest.tempImageGrids,
         }
       }),
 
-    addTempImage: (data: Record<string, ImageGen[]>, id?: string) =>
+    addTempImage: (data: Record<string, ImageGen[]>) =>
       set(() => {
         const latest = get()
         const tempImageGrids = { ...latest.tempImageGrids, ...data }

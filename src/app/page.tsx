@@ -7,7 +7,6 @@ import { useAppStore, type ImageGen } from '~/stores/app'
 
 import Search from '~/components/search'
 import ImageGrid from '~/components/image-grid'
-import Img from '~/components/image'
 import Gallery from '~/components/gallery'
 
 export default function Home() {
@@ -34,7 +33,7 @@ export default function Home() {
       }
     })
 
-    setGrids(tempGirds, true)
+    setGrids(tempGirds, { emptyTempImageGrids: true })
   }
 
   return (
@@ -55,12 +54,6 @@ export default function Home() {
       </div>
 
       <div className="mt-4 ml-20 w-[600px]">
-        <Img
-          src="https://placehold.co/180"
-          alt="Lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet"
-          onClick={() => {}}
-        />
-
         {tempImageGridsKeys.length > 0 &&
           tempImageGridsKeys.map((key) => (
             <ImageGrid
@@ -74,7 +67,7 @@ export default function Home() {
       </div>
 
       <div className="mt-4 mx-8">
-        <Gallery grids={girds} />
+        <Gallery grids={girds} addTempImage={addTempImage} setGrids={setGrids} />
       </div>
     </>
   )

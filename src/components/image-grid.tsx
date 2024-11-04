@@ -10,7 +10,7 @@ interface ImageGridProps {
   id: string
   grids: ImageGen[]
 
-  addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
+  addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
 }
 
@@ -31,7 +31,7 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage }: ImageGridProps)
 
       case 'GENERATE':
         const generateData = generateImage(id, index, grids)
-        addTempImage(generateData, id)
+        addTempImage(generateData)
         break
     }
   }

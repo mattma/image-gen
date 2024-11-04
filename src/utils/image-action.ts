@@ -33,7 +33,7 @@ function generate(count: number): ImageGen[] {
 }
 
 export function generateImage(
-  id: string,
+  id: string | null = uuid(),
   index: number,
   grids: ImageGen[],
 ): Record<string, ImageGen[]> {
