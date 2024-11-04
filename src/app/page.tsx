@@ -6,6 +6,7 @@ import { useShallow } from 'zustand/shallow'
 import { useAppStore, type ImageGen } from '~/stores/app'
 
 import Favorites from '~/components/favorites'
+import SidebarToggle from '~/components/sidebar-toggle'
 import Search from '~/components/search'
 import ImageGrid from '~/components/image-grid'
 import Gallery from '~/components/gallery'
@@ -25,6 +26,8 @@ export default function Home() {
     )
 
   const [query, setQuery] = useState('')
+
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
   const tempImageGridsKeys = Object.keys(tempImageGrids)
 
@@ -49,18 +52,27 @@ export default function Home() {
 
   return (
     <div className="flex w-full h-full">
-      <aside className="relative w-[128px] bg-gray-100 border-r border-gray-200">
-        <div className="sticky top-5">
+      <aside
+        className={`relative bg-gray-100 border-r border-gray-200 transition-width duration-300 ${isSidebarOpen ? 'w-[128px]' : 'w-0'}`}
+      >
+        <div className="sticky top-4">
           <div className="overflow-y-auto">
             <h3 className="mb-2 pl-4 text-sm font-medium tracking-tight  text-gray-700">
-              Favorites ({favorites.length})
+              Favorites <span className="text-xs text-gray-500">({favorites.length})</span>
             </h3>
             <Favorites favorites={favorites} setFavorites={setFavorites} />
           </div>
         </div>
       </aside>
 
-      <section className="flex-1 space-y-8 px-8 overflow-y-auto">
+      <section className="relative flex-1 space-y-8 px-8 overflow-y-auto">
+        <div
+          className="absolute top-4 left-2 hover:opacity-75 hover:cursor-pointer"
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+        >
+          <SidebarToggle />
+        </div>
+
         <div className="mt-4">
           <h1 className="text-3xl font-bold text-center">Live Image Generation</h1>
 
