@@ -12,9 +12,10 @@ interface ImageGridProps {
 
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
+  setFavorites: (favorite: ImageGen) => void
 }
 
-const ImageGrid = ({ id, grids, addTempImage, removeTempImage }: ImageGridProps) => {
+const ImageGrid = ({ id, grids, addTempImage, removeTempImage, setFavorites }: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
   const onImageClick = (action: Action, index: number) => {
@@ -33,6 +34,14 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage }: ImageGridProps)
         const generateData = generateImage(id, index, grids)
         addTempImage(generateData)
         break
+
+      case 'FAVORITE':
+        const favoriteData = [...grids]
+        favoriteData[index].isFavorite = !favoriteData[index].isFavorite
+
+        setFavorites(favoriteData[index])
+        addTempImage({ [id]: favoriteData })
+        break
     }
   }
 
@@ -45,8 +54,7 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage }: ImageGridProps)
         >
           {image.src !== '' && (
             <Img
-              src={image.src}
-              alt={image.alt}
+              {...image}
               index={index}
               onClick={(action: Action) => onImageClick(action, index)}
               setHoverState={setHoverState}

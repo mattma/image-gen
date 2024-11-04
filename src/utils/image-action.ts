@@ -55,3 +55,17 @@ export function generateImage(
 
   return ret
 }
+
+// if the current favorite is already in the favorites list, remove it
+// otherwise, add it to the favorites list
+export function updateFavoriteList(favorites: ImageGen[], currentFavorite: ImageGen): ImageGen[] {
+  let newFavorites = [...favorites]
+
+  if (currentFavorite.isFavorite) {
+    newFavorites.push(currentFavorite)
+  } else {
+    newFavorites = newFavorites.filter((favorite) => favorite.src !== currentFavorite.src)
+  }
+
+  return newFavorites
+}

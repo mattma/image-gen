@@ -9,9 +9,10 @@ type GalleryProps = {
 
   addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
+  setFavorites: (favorite: ImageGen) => void
 }
 
-const Gallery = ({ grids, addTempImage, setGrids }: GalleryProps) => {
+const Gallery = ({ grids, addTempImage, setGrids, setFavorites }: GalleryProps) => {
   const onImageClick = (action: Action, index: number) => {
     switch (action) {
       case 'ADD':
@@ -35,6 +36,14 @@ const Gallery = ({ grids, addTempImage, setGrids }: GalleryProps) => {
         const updatedGrids = [...grids]
         updatedGrids.splice(index, 1)
         setGrids(updatedGrids, { replace: true })
+        break
+
+      case 'FAVORITE':
+        const favoriteData = [...grids]
+        favoriteData[index].isFavorite = !favoriteData[index].isFavorite
+
+        setFavorites(favoriteData[index])
+        setGrids(favoriteData, { replace: true })
         break
     }
   }

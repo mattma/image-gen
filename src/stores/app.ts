@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 
+import { updateFavoriteList } from '~/utils/image-action'
+
 export type SetGridOptions = {
   replace?: boolean
   emptyTempImageGrids?: boolean
@@ -9,38 +11,46 @@ export type SetGridOptions = {
 export type ImageGen = {
   src: string
   alt: string
+  isFavorite: boolean
 }
 
 const temp: ImageGen[] = [
   {
     src: 'https://placehold.co/180',
     alt: 'Lorem ipsum dolor sit amet',
+    isFavorite: false,
   },
   {
     src: 'https://placehold.co/180',
     alt: 'Lorem ipsum dolor sit amet',
+    isFavorite: false,
   },
   {
     src: 'https://placehold.co/180',
     alt: 'center image',
+    isFavorite: false,
   },
   {
     src: 'https://placehold.co/180',
     alt: 'Lorem ipsum dolor sit amet',
+    isFavorite: false,
   },
   {
     src: 'https://placehold.co/180',
     alt: 'Last image',
+    isFavorite: false,
   },
 ]
 
 export interface AppProps {
   grids: ImageGen[]
   tempImageGrids: Record<string, ImageGen[]>
+  favorites: ImageGen[]
 
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
+  setFavorites: (favorite: ImageGen | ImageGen[]) => void
 }
 
 // Redux Devtools enabled for debugging
@@ -53,9 +63,11 @@ export const useAppStore = create<AppProps>()(
         {
           src: 'https://placehold.co/180',
           alt: 'testing for a single image',
+          isFavorite: false,
         },
       ],
     },
+    favorites: [],
 
     setGrids: (newGrids: ImageGen[], options?: SetGridOptions) =>
       set(() => {
@@ -87,6 +99,23 @@ export const useAppStore = create<AppProps>()(
         }
 
         return { tempImageGrids: tempImageGrids ?? {} }
+      }),
+
+    setFavorites: (favorite: ImageGen | ImageGen[]) =>
+      set(() => {
+        const latest = get()
+        let newFavorites: ImageGen[] = []
+
+        // if the favorite is an array, set it directly, otherwise update the favorites list
+        if (Array.isArray(favorite)) {
+          newFavorites = favorite
+        } else {
+          newFavorites = updateFavoriteList(latest.favorites, favorite)
+
+          window.localStorage.setItem('favorites', JSON.stringify(newFavorites))
+        }
+
+        return { favorites: newFavorites }
       }),
   })),
 )

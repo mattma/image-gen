@@ -1,11 +1,11 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import Draggable from 'react-draggable'
 
 import type { ImageGen } from '~/stores/app'
 
-import useLocalStorage from '~/hooks/use-local-storage'
+import Heart from '~/components/heart'
 
-export type Action = 'ADD' | 'REMOVE' | 'GENERATE'
+export type Action = 'ADD' | 'REMOVE' | 'GENERATE' | 'FAVORITE'
 
 export type ImageHoverState = {
   hover: boolean
@@ -19,12 +19,8 @@ interface ImageProps extends ImageGen {
   setHoverState?: (drag: ImageHoverState) => void
 }
 
-const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
+const Img = ({ src, alt, isFavorite, index, onClick, setHoverState }: ImageProps) => {
   const nodeRef = useRef(null)
-
-  const [favorites, setFavorites] = useLocalStorage<ImageGen[]>('favorites', [])
-
-  const [isFavorite, setIsFavorite] = useState(false)
 
   const actions = [
     {
@@ -48,19 +44,17 @@ const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
     }
   }
 
-  const handleFavorite = () => {
-    setIsFavorite(!isFavorite)
-
-    // update the favorites array in local storage
-    let newFavorites = [...(favorites ?? [])]
-
-    if (isFavorite) {
-      newFavorites = newFavorites.filter((favorite) => favorite.src !== src)
-    } else {
-      newFavorites.push({ src, alt })
-    }
-
-    setFavorites(newFavorites)
+  const setFavorite = () => {
+    // const favorites = JSON.parse(window.localStorage.getItem('favorites') ?? '[]')
+    // let newFavorites = [...(favorites ?? [])]
+    // if (isFavorite) {
+    //   newFavorites = newFavorites.filter((favorite) => favorite.src !== src)
+    // } else {
+    //   newFavorites.push({ src, alt })
+    // }
+    // window.localStorage.setItem('favorites', JSON.stringify(newFavorites))
+    // setIsFavorite(!isFavorite)
+    onClick('FAVORITE')
   }
 
   return (
@@ -75,25 +69,7 @@ const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
 
-        <div
-          className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 hover:cursor-pointer transition-opacity duration-300"
-          onClick={handleFavorite}
-        >
-          <svg
-            width="24"
-            height="24"
-            xmlns="http://www.w3.org/2000/svg"
-            fillRule="evenodd"
-            clipRule="evenodd"
-            viewBox="0 0 122.88 107.39"
-          >
-            <path
-              d="M60.83,17.18c8-8.35,13.62-15.57,26-17C110-2.46,131.27,21.26,119.57,44.61c-3.33,6.65-10.11,14.56-17.61,22.32-8.23,8.52-17.34,16.87-23.72,23.2l-17.4,17.26L46.46,93.55C29.16,76.89,1,55.92,0,29.94-.63,11.74,13.73.08,30.25.29c14.76.2,21,7.54,30.58,16.89Z"
-              className={`${isFavorite ? 'fill-red-500' : 'fill-white'}`}
-            />
-          </svg>
-          <p className="sr-only">Heart for favorite</p>
-        </div>
+        <Heart isFavorite={isFavorite} setFavorite={setFavorite} />
 
         <div className="absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
           {actions.map((action) => (
