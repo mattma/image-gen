@@ -44,6 +44,12 @@ export const useAppStore = create<AppProps>()(
     grids: temp,
     tempImageGrids: {
       '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed': temp,
+      '2b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed': [
+        {
+          src: 'https://placehold.co/180',
+          alt: 'Lorem ipsum dolor sit amet',
+        },
+      ],
     },
 
     setGrids: (g: ImageGen[], emptyTempImageGrids = false) =>

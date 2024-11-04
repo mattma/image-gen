@@ -17,10 +17,12 @@ export default function Home() {
 
   const [query, setQuery] = useState('')
 
+  const tempImageGridsKeys = Object.keys(tempImageGrids)
+
   const handleArrange = () => {
     const tempGirds: ImageGen[] = []
 
-    Object.keys(tempImageGrids).forEach((key) => {
+    tempImageGridsKeys.forEach((key) => {
       if (tempImageGrids[key].length > 0) {
         tempGirds.push(...tempImageGrids[key])
       }
@@ -53,9 +55,8 @@ export default function Home() {
           onClick={() => {}}
         />
 
-        {Object.keys(tempImageGrids).map((key) => (
-          <ImageGrid key={key} />
-        ))}
+        {tempImageGridsKeys.length > 0 &&
+          tempImageGridsKeys.map((key) => <ImageGrid key={key} grids={tempImageGrids[key]} />)}
       </div>
 
       <div className="mt-4 mx-8">
