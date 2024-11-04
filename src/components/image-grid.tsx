@@ -37,7 +37,7 @@ const ImageGrid = ({ id, grids, addTempImage, removeTempImage }: ImageGridProps)
   }
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="w-[600px] grid grid-cols-3 gap-4">
       {grids.map((image, index) => (
         <div
           key={index}

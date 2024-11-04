@@ -50,7 +50,7 @@ export function generateImage(
     const newGrids = generate(4)
     newGrids.splice(2, 0, grids[index])
 
-    ret = { [id]: newGrids }
+    ret = { [id as string]: newGrids }
   }
 
   return ret

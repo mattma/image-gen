@@ -37,7 +37,7 @@ export default function Home() {
   }
 
   return (
-    <>
+    <div className="space-y-8 mx-8">
       <div className="mt-4">
         <h1 className="text-3xl font-bold text-center">Live Image Generation</h1>
 
@@ -53,7 +53,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mt-4 ml-20 w-[600px]">
+      <div className="h-[40%] bg-gray-100">
         {tempImageGridsKeys.length > 0 &&
           tempImageGridsKeys.map((key) => (
             <ImageGrid
@@ -66,9 +66,9 @@ export default function Home() {
           ))}
       </div>
 
-      <div className="mt-4 mx-8">
+      <div className="">
         <Gallery grids={girds} addTempImage={addTempImage} setGrids={setGrids} />
       </div>
-    </>
+    </div>
   )
 }

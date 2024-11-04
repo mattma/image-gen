@@ -3,6 +3,8 @@ import Draggable from 'react-draggable'
 
 import type { ImageGen } from '~/stores/app'
 
+import useLocalStorage from '~/hooks/use-local-storage'
+
 export type Action = 'ADD' | 'REMOVE' | 'GENERATE'
 
 export type ImageHoverState = {
@@ -19,6 +21,8 @@ interface ImageProps extends ImageGen {
 
 const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
   const nodeRef = useRef(null)
+
+  const [favorites, setFavorites] = useLocalStorage<ImageGen[]>('favorites', [])
 
   const [isFavorite, setIsFavorite] = useState(false)
 
@@ -44,6 +48,21 @@ const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
     }
   }
 
+  const handleFavorite = () => {
+    setIsFavorite(!isFavorite)
+
+    // update the favorites array in local storage
+    let newFavorites = [...(favorites ?? [])]
+
+    if (isFavorite) {
+      newFavorites = newFavorites.filter((favorite) => favorite.src !== src)
+    } else {
+      newFavorites.push({ src, alt })
+    }
+
+    setFavorites(newFavorites)
+  }
+
   return (
     <Draggable nodeRef={nodeRef}>
       <div
@@ -58,7 +77,7 @@ const Img = ({ src, alt, index, onClick, setHoverState }: ImageProps) => {
 
         <div
           className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 hover:cursor-pointer transition-opacity duration-300"
-          onClick={() => setIsFavorite(!isFavorite)}
+          onClick={handleFavorite}
         >
           <svg
             width="24"
