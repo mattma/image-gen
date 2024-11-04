@@ -53,7 +53,9 @@ export default function Home() {
           onClick={() => {}}
         />
 
-        <ImageGrid />
+        {Object.keys(tempImageGrids).map((key) => (
+          <ImageGrid key={key} />
+        ))}
       </div>
 
       <div className="mt-4 mx-8">

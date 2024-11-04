@@ -1,11 +1,9 @@
-'use client'
-
 type SearchProps = {
   query: string
   setQuery: (query: string) => void
 }
 
-export default function Search({ query, setQuery }: SearchProps) {
+const Search = ({ query, setQuery }: SearchProps) => {
   return (
     <input
       type="text"
@@ -15,3 +13,5 @@ export default function Search({ query, setQuery }: SearchProps) {
     />
   )
 }
+
+export default Search

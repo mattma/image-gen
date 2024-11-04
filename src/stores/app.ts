@@ -38,6 +38,7 @@ export interface AppProps {
   setTempImageGrids: (grids: Record<string, ImageGen[]>) => void
 }
 
+// Redux Devtools enabled for debugging
 export const useAppStore = create<AppProps>()(
   devtools((set, get) => ({
     grids: temp,

@@ -6,7 +6,7 @@ type GalleryProps = {
   grids: ImageGen[]
 }
 
-export default function Gallery({ grids }: GalleryProps) {
+const Gallery = ({ grids }: GalleryProps) => {
   return (
     <>
       {grids.length > 0 ? (
@@ -19,3 +19,5 @@ export default function Gallery({ grids }: GalleryProps) {
     </>
   )
 }
+
+export default Gallery
