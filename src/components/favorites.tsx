@@ -1,18 +1,35 @@
 import type { ImageGen } from '~/stores/app'
 
-import type { Action } from '~/components/image'
 import Heart from '~/components/heart'
+
+import { addImage, generateImage } from '~/utils/image-action'
 
 interface FavoritesProps {
   favorites: ImageGen[]
 
   setFavorites: (favorite: ImageGen, scan?: boolean) => void
+  addTempImage: (data: Record<string, ImageGen[]>) => void
 }
 
-export default function Favorites({ favorites, setFavorites }: FavoritesProps) {
-  const onImageClick = (action: Action, index: number) => {
-    console.log(action, index)
-  }
+export default function Favorites({ favorites, setFavorites, addTempImage }: FavoritesProps) {
+  const actions = [
+    {
+      icon: '+',
+      onClick: (favorite: ImageGen) => {
+        const addData = addImage(favorite)
+        addTempImage(addData)
+      },
+      className: '',
+    },
+    {
+      icon: '!',
+      onClick: (favorite: ImageGen) => {
+        const generateData = generateImage(null, 0, [favorite])
+        addTempImage(generateData)
+      },
+      className: 'pt-[1.5px]',
+    },
+  ]
 
   const setFavorite = (favorite: ImageGen) => {
     const favoriteData = {
@@ -37,6 +54,20 @@ export default function Favorites({ favorites, setFavorites }: FavoritesProps) {
             className="absolute top-1 right-1 hover:opacity-75"
             setFavorite={() => setFavorite(favorite)}
           />
+
+          <div className="absolute bottom-1 right-1 flex gap-1">
+            {actions.map((action) => (
+              <div
+                key={action.icon}
+                onClick={() => action.onClick(favorite)}
+                className={`w-4 h-4 bg-black/50 rounded-full text-white font-bold text-center hover:cursor-pointer hover:bg-black/75 leading-none text-sm ${
+                  action.className ? action.className : ''
+                }`}
+              >
+                {action.icon}
+              </div>
+            ))}
+          </div>
         </div>
       ))}
     </div>

@@ -60,7 +60,11 @@ export default function Home() {
             <h3 className="mb-2 pl-4 text-sm font-medium tracking-tight  text-gray-700">
               Favorites <span className="text-xs text-gray-500">({favorites.length})</span>
             </h3>
-            <Favorites favorites={favorites} setFavorites={setFavorites} />
+            <Favorites
+              favorites={favorites}
+              setFavorites={setFavorites}
+              addTempImage={addTempImage}
+            />
           </div>
         </div>
       </aside>

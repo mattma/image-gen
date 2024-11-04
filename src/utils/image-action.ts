@@ -5,7 +5,7 @@ import type { ImageGen } from '~/stores/app'
 export function addImage(image: ImageGen): Record<string, ImageGen[]> {
   const id = uuid()
 
-  return { [id]: [image] }
+  return { [id]: [{ ...image, id: uuid(), isFavorite: false }] }
 }
 
 // if the grids size is 5, remove the image and return the new grids
@@ -50,7 +50,10 @@ export function generateImage(
     ret = { [newId]: generate(5) }
   } else if (size === 1) {
     const newGrids = generate(4)
-    newGrids.splice(2, 0, grids[index])
+    // make sure the new image has a new id
+    const newImage = { ...grids[index], id: uuid(), isFavorite: false }
+
+    newGrids.splice(2, 0, newImage)
 
     ret = { [id as string]: newGrids }
   }
