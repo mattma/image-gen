@@ -36,7 +36,12 @@ export default function Home() {
 
     tempImageGridsKeys.forEach((key) => {
       if (tempImageGrids[key].length > 0) {
-        tempGirds.push(...tempImageGrids[key])
+        for (const image of tempImageGrids[key]) {
+          // only push if image is not empty
+          if (image && image.src !== '') {
+            tempGirds.push(image)
+          }
+        }
       }
     })
 

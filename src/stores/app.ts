@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
+import { v4 as uuidv4 } from 'uuid'
 
 import { updateFavoriteList } from '~/utils/image-action'
 
@@ -15,38 +16,40 @@ export type ImageGen = {
   isFavorite: boolean
 }
 
-const temp: ImageGen[] = [
-  {
-    id: '1b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
-    src: 'https://placehold.co/180',
-    alt: 'Lorem ipsum dolor sit amet',
-    isFavorite: false,
-  },
-  {
-    id: '2b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
-    src: 'https://placehold.co/180',
-    alt: 'Lorem ipsum dolor sit amet',
-    isFavorite: false,
-  },
-  {
-    id: '3b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
-    src: 'https://placehold.co/180',
-    alt: 'center image',
-    isFavorite: false,
-  },
-  {
-    id: '4b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
-    src: 'https://placehold.co/180',
-    alt: 'Lorem ipsum dolor sit amet',
-    isFavorite: false,
-  },
-  {
-    id: '5b9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
-    src: 'https://placehold.co/180',
-    alt: 'Last image',
-    isFavorite: false,
-  },
-]
+const temp = (): ImageGen[] => {
+  return [
+    {
+      id: uuidv4(),
+      src: 'https://placehold.co/180',
+      alt: '1 Lorem ipsum dolor sit amet',
+      isFavorite: false,
+    },
+    {
+      id: uuidv4(),
+      src: 'https://placehold.co/180',
+      alt: '2 Lorem ipsum dolor sit amet',
+      isFavorite: false,
+    },
+    {
+      id: uuidv4(),
+      src: 'https://placehold.co/180',
+      alt: '3 center image',
+      isFavorite: false,
+    },
+    {
+      id: uuidv4(),
+      src: 'https://placehold.co/180',
+      alt: '4 Lorem ipsum dolor sit amet',
+      isFavorite: false,
+    },
+    {
+      id: uuidv4(),
+      src: 'https://placehold.co/180',
+      alt: '5 Last image',
+      isFavorite: false,
+    },
+  ]
+}
 
 export interface AppProps {
   grids: ImageGen[]
@@ -62,18 +65,11 @@ export interface AppProps {
 // Redux Devtools enabled for debugging
 export const useAppStore = create<AppProps>()(
   devtools((set, get) => ({
-    grids: temp,
-    tempImageGrids: {
-      '1c9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed': temp,
-      '2g9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed': [
-        {
-          id: '2g9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed',
-          src: 'https://placehold.co/180',
-          alt: 'testing for a single image',
-          isFavorite: false,
-        },
-      ],
-    },
+    grids: temp(),
+    tempImageGrids: {},
+    // tempImageGrids: {
+    //   '1c9d6bcd-bbfd-4b2d-9b5d-ab8dfbbd4bed': [...temp(), ...temp()],
+    // },
     favorites: [],
 
     setGrids: (newGrids: ImageGen[], options?: SetGridOptions) =>
@@ -105,7 +101,7 @@ export const useAppStore = create<AppProps>()(
           delete tempImageGrids[id]
         }
 
-        return { tempImageGrids: tempImageGrids ?? {} }
+        return { tempImageGrids }
       }),
 
     // scan is used to scan the favorite image in `tempImageGrids` and `grids`, used in `Favorites` component
