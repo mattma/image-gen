@@ -53,19 +53,17 @@ export default function Home() {
   return (
     <div className="flex w-full h-full">
       <aside
-        className={`relative bg-gray-100 border-r border-gray-200 transition-width duration-300 ${isSidebarOpen ? 'w-[128px]' : 'w-0'}`}
+        className={`relative py-4 bg-gray-100 border-r border-gray-200 transition-width duration-300 overflow-y-auto ${isSidebarOpen ? 'w-[128px]' : 'w-0'}`}
       >
-        <div className="sticky top-4">
-          <div className="overflow-y-auto">
-            <h3 className="mb-2 pl-4 text-sm font-medium tracking-tight  text-gray-700">
-              Favorites <span className="text-xs text-gray-500">({favorites.length})</span>
-            </h3>
-            <Favorites
-              favorites={favorites}
-              setFavorites={setFavorites}
-              addTempImage={addTempImage}
-            />
-          </div>
+        <div className="sticky">
+          <h3 className="mb-2 pl-4 text-sm font-medium tracking-tight  text-gray-700">
+            Favorites <span className="text-xs text-gray-500">({favorites.length})</span>
+          </h3>
+          <Favorites
+            favorites={favorites}
+            setFavorites={setFavorites}
+            addTempImage={addTempImage}
+          />
         </div>
       </aside>
 
