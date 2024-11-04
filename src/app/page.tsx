@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useShallow } from 'zustand/shallow'
 
-import { useAppStore } from '~/stores/app'
+import { useAppStore, type ImageGen } from '~/stores/app'
 
 import Search from '~/components/search'
 import ImageGrid from '~/components/image-grid'
@@ -11,12 +11,22 @@ import Img from '~/components/image'
 import Gallery from '~/components/gallery'
 
 export default function Home() {
-  const [girds] = useAppStore(useShallow((state) => [state.grids]))
+  const [girds, tempImageGrids, setGrids] = useAppStore(
+    useShallow((state) => [state.grids, state.tempImageGrids, state.setGrids]),
+  )
 
   const [query, setQuery] = useState('')
 
   const handleArrange = () => {
-    console.log('arrange')
+    const tempGirds: ImageGen[] = []
+
+    Object.keys(tempImageGrids).forEach((key) => {
+      if (tempImageGrids[key].length > 0) {
+        tempGirds.push(...tempImageGrids[key])
+      }
+    })
+
+    setGrids(tempGirds, true)
   }
 
   return (
