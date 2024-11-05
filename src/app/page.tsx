@@ -31,6 +31,37 @@ export default function Home() {
 
   const tempImageGridsKeys = Object.keys(tempImageGrids)
 
+  const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ImageGen[] }[]>([])
+  const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ImageGen[] }[]>([])
+
+  useEffect(() => {
+    const keys = Object.keys(tempImageGrids)
+    const singleGroup: { id: string; data: ImageGen[] }[] = []
+    const fiveGroup: { id: string; data: ImageGen[] }[] = []
+
+    if (keys.length > 0) {
+      keys.forEach((key) => {
+        const gridSize = tempImageGrids[key].length
+
+        if (gridSize === 1) {
+          singleGroup.push({ id: key, data: tempImageGrids[key] })
+        } else if (gridSize === 5) {
+          fiveGroup.push({ id: key, data: tempImageGrids[key] })
+        }
+      })
+    }
+
+    setTempGridSingle(singleGroup)
+    setTempGridFive(fiveGroup)
+  }, [tempImageGrids])
+
+  // Initialize page load with favorites from local storage
+  useEffect(() => {
+    const favorites = JSON.parse(window.localStorage.getItem('favorites') ?? '[]')
+
+    setFavorites(favorites)
+  }, [setFavorites])
+
   const handleArrange = () => {
     const tempGirds: ImageGen[] = []
 
@@ -47,13 +78,6 @@ export default function Home() {
 
     setGrids(tempGirds, { emptyTempImageGrids: true })
   }
-
-  // Initialize page load with favorites from local storage
-  useEffect(() => {
-    const favorites = JSON.parse(window.localStorage.getItem('favorites') ?? '[]')
-
-    setFavorites(favorites)
-  }, [setFavorites])
 
   return (
     <div className="flex w-full h-full">
@@ -95,22 +119,33 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="h-[60%] bg-gray-100">
-          {tempImageGridsKeys.length > 0 && (
-            <div className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
-              {tempImageGridsKeys.map((key, level) => (
-                <ImageGrid
-                  key={key}
-                  id={key}
-                  level={level}
-                  grids={tempImageGrids[key]}
-                  addTempImage={addTempImage}
-                  removeTempImage={removeTempImage}
-                  setFavorites={setFavorites}
-                />
-              ))}
+        <div className="relative h-[60%] bg-gray-100">
+          {tempGridFive.map((group, level) => (
+            <div key={group.id} className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
+              <ImageGrid
+                id={group.id}
+                level={level}
+                grids={group.data}
+                addTempImage={addTempImage}
+                removeTempImage={removeTempImage}
+                setFavorites={setFavorites}
+              />
             </div>
-          )}
+          ))}
+
+          {tempGridSingle.map((single, level) => (
+            <div key={single.id} className="">
+              <ImageGrid
+                id={single.id}
+                level={level}
+                grids={single.data}
+                isSingle={true}
+                addTempImage={addTempImage}
+                removeTempImage={removeTempImage}
+                setFavorites={setFavorites}
+              />
+            </div>
+          ))}
         </div>
 
         <div className="">
