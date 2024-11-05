@@ -2,25 +2,6 @@ import { v4 as uuid } from 'uuid'
 
 import type { ImageGen } from '~/stores/app'
 
-export function createImage(imagePartial: Partial<ImageGen>): {
-  groupId: string
-  imageData: ImageGen
-} {
-  const gridId = uuid()
-  const imageId = uuid()
-
-  return {
-    groupId: gridId,
-    imageData: {
-      id: imageId,
-      src: 'https://placehold.co/180',
-      alt: 'generated',
-      isFavorite: false,
-      ...imagePartial,
-    },
-  }
-}
-
 export function addImage(image: ImageGen): Record<string, ImageGen[]> {
   const gridId = uuid()
   const imageId = uuid()

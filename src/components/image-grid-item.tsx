@@ -30,8 +30,8 @@ const ImageGridItem = ({
   setActiveImage,
 }: ImageGridItemProps) => {
   const [position, setPosition] = useState({
-    x: (isSingle ? 20 : 10) * level,
-    y: (isSingle ? 30 : -280) * level,
+    x: 10 * level,
+    y: (isSingle ? -80 : -280) * level,
   })
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)

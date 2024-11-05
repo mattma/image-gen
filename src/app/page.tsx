@@ -12,8 +12,6 @@ import Gallery from '~/components/gallery'
 
 import { fetchChatCompletion, fetchImage } from '~/services/api'
 
-import { createImage } from '~/utils/image-action'
-
 export default function Home() {
   const [
     girds,
@@ -25,6 +23,7 @@ export default function Home() {
     removeTempImage,
     setFavorites,
     setActiveImage,
+    setCurrentImageGen,
   ] = useAppStore(
     useShallow((state) => [
       state.grids,
@@ -36,6 +35,7 @@ export default function Home() {
       state.removeTempImage,
       state.setFavorites,
       state.setActiveImage,
+      state.setCurrentImageGen,
     ]),
   )
 
@@ -55,33 +55,19 @@ export default function Home() {
         const result = await fetchImage(debouncedQuery)
 
         console.log('result', result)
-        if (result) {
-          if (activeImage) {
-            // const { id, isFavorite } = activeImage
-            // const data: ImageGen[] = [
-            //   {
-            //     id,
-            //     isFavorite,
-            //     src: 'https://placehold.co/390',
-            //     alt: debouncedQuery,
-            //   },
-            // ]
-            // // apply newly generated image to the active image
-            // addTempImage({ [activeImage.id]: data })
-          } else {
-            // create a new entry in the temp image grids
-            const { groupId, imageData } = createImage({
-              src: result.images[0].url,
-              alt: result.prompt,
-            })
 
-            addTempImage({ [groupId]: [imageData] })
-            setActiveImage({ ...imageData, groupId })
+        if (result) {
+          // create a new entry in the temp image grids
+          const imageData: Pick<ImageGen, 'src' | 'alt'> = {
+            src: result.images[0].url,
+            alt: result.prompt,
           }
+
+          setCurrentImageGen(imageData)
         }
       })()
     }
-  }, [debouncedQuery, activeImage, addTempImage, setActiveImage])
+  }, [debouncedQuery, setCurrentImageGen])
 
   useEffect(() => {
     // debounce query by 800 ms
@@ -180,7 +166,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative h-[60%]">
+        <div className="relative h-[60%] z-50">
           {tempGridFive.map((group, level) => (
             <div key={group.id} className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
               <ImageGrid
@@ -196,9 +182,10 @@ export default function Home() {
             </div>
           ))}
 
-          {tempGridSingle.map((single, level) => (
-            <div key={single.id} className="absolute top-0 left-0">
+          <div className="absolute top-0 left-0">
+            {tempGridSingle.map((single, level) => (
               <ImageGrid
+                key={single.id}
                 id={single.id}
                 level={level}
                 grids={single.data}
@@ -209,8 +196,8 @@ export default function Home() {
                 setFavorites={setFavorites}
                 setActiveImage={setActiveImage}
               />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
 
         <div className="">

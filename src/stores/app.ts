@@ -66,6 +66,7 @@ export interface AppProps {
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setFavorites: (favorite: ImageGen | ImageGen[], scan?: boolean) => void
   setActiveImage: (image: ActiveImageGen | null) => void
+  setCurrentImageGen: (image: Pick<ImageGen, 'src' | 'alt'>) => void
 }
 
 // Redux Devtools enabled for debugging
@@ -157,5 +158,27 @@ export const useAppStore = create<AppProps>()(
       }),
 
     setActiveImage: (image: ActiveImageGen | null) => set(() => ({ activeImage: image })),
+
+    setCurrentImageGen: (image: Pick<ImageGen, 'src' | 'alt'>) =>
+      set(() => {
+        const latest = get()
+        const { tempImageGrids, activeImage } = latest
+
+        const groupId = activeImage?.groupId ?? uuid()
+
+        const updatedActiveImage: ImageGen = {
+          ...image,
+          id: activeImage?.id ?? uuid(),
+          isFavorite: activeImage?.isFavorite ?? false,
+        }
+
+        return {
+          tempImageGrids: {
+            ...tempImageGrids,
+            [groupId]: [updatedActiveImage],
+          },
+          activeImage: { ...updatedActiveImage, groupId },
+        }
+      }),
   })),
 )
