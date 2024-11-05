@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import type { ImageGen } from '~/stores/app'
+import type { ImageGen, ActiveImageGen } from '~/stores/app'
 
 import type { Action, ImageHoverState } from '~/components/image'
 import ImageGridItem from '~/components/image-grid-item'
@@ -17,7 +17,7 @@ interface ImageGridProps {
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setFavorites: (favorite: ImageGen) => void
-  setActiveImage: (image: ImageGen | null) => void
+  setActiveImage: (image: ActiveImageGen | null) => void
 }
 
 const ImageGrid = ({
@@ -69,6 +69,7 @@ const ImageGrid = ({
           index={index}
           level={level}
           isSingle={isSingle}
+          groupId={id}
           hoverState={hoverState}
           activeImageId={activeImageId}
           onImageClick={onImageClick}

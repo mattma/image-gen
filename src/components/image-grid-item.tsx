@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-import { ImageGen } from '~/stores/app'
+import type { ImageGen, ActiveImageGen } from '~/stores/app'
 
 import Img, { type Action, type ImageHoverState } from '~/components/image'
 
@@ -11,9 +11,10 @@ interface ImageGridItemProps {
   isSingle: boolean
   hoverState: { hover: boolean; index: number }
   activeImageId?: string
+  groupId?: string
   onImageClick: (action: Action, index: number) => void
   setHoverState: (hoverState: ImageHoverState) => void
-  setActiveImage: (image: ImageGen | null) => void
+  setActiveImage: (image: ActiveImageGen | null) => void
 }
 
 const ImageGridItem = ({
@@ -23,6 +24,7 @@ const ImageGridItem = ({
   isSingle,
   hoverState,
   activeImageId,
+  groupId,
   onImageClick,
   setHoverState,
   setActiveImage,
@@ -45,7 +47,9 @@ const ImageGridItem = ({
         top: `${top}px`,
         left: `${left}px`,
       }}
-      onDoubleClick={() => setActiveImage(activeImageId === image.id ? null : image)}
+      onDoubleClick={() =>
+        setActiveImage(activeImageId === image.id ? null : { ...image, groupId })
+      }
     >
       {image.src !== '' && (
         <Img

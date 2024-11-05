@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuid } from 'uuid'
 
 import { updateFavoriteList } from '~/utils/image-action'
 
@@ -16,34 +16,38 @@ export type ImageGen = {
   isFavorite: boolean
 }
 
+export interface ActiveImageGen extends ImageGen {
+  groupId?: string
+}
+
 const temp = (): ImageGen[] => {
   return [
     {
-      id: uuidv4(),
+      id: uuid(),
       src: 'https://placehold.co/180',
       alt: '1 Lorem ipsum dolor sit amet',
       isFavorite: false,
     },
     {
-      id: uuidv4(),
+      id: uuid(),
       src: 'https://placehold.co/180',
       alt: '2 Lorem ipsum dolor sit amet',
       isFavorite: false,
     },
     {
-      id: uuidv4(),
+      id: uuid(),
       src: 'https://placehold.co/180',
       alt: '3 center image',
       isFavorite: false,
     },
     {
-      id: uuidv4(),
+      id: uuid(),
       src: 'https://placehold.co/180',
       alt: '4 Lorem ipsum dolor sit amet',
       isFavorite: false,
     },
     {
-      id: uuidv4(),
+      id: uuid(),
       src: 'https://placehold.co/180',
       alt: '5 Last image',
       isFavorite: false,
@@ -55,13 +59,13 @@ export interface AppProps {
   grids: ImageGen[]
   tempImageGrids: Record<string, ImageGen[]>
   favorites: ImageGen[]
-  activeImage: ImageGen | null
+  activeImage: ActiveImageGen | null
 
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setFavorites: (favorite: ImageGen | ImageGen[], scan?: boolean) => void
-  setActiveImage: (image: ImageGen | null) => void
+  setActiveImage: (image: ActiveImageGen | null) => void
 }
 
 // Redux Devtools enabled for debugging
@@ -71,6 +75,7 @@ export const useAppStore = create<AppProps>()(
     tempImageGrids: {},
     favorites: [],
     activeImage: null,
+
     setGrids: (newGrids: ImageGen[], options?: SetGridOptions) =>
       set(() => {
         const latest = get()
@@ -151,6 +156,6 @@ export const useAppStore = create<AppProps>()(
         return { favorites: newFavorites, tempImageGrids, grids }
       }),
 
-    setActiveImage: (image: ImageGen | null) => set(() => ({ activeImage: image })),
+    setActiveImage: (image: ActiveImageGen | null) => set(() => ({ activeImage: image })),
   })),
 )

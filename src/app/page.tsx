@@ -3,7 +3,7 @@
 import { useState, useEffect, type ChangeEvent } from 'react'
 import { useShallow } from 'zustand/shallow'
 
-import { useAppStore, type ImageGen } from '~/stores/app'
+import { useAppStore, type ActiveImageGen, type ImageGen } from '~/stores/app'
 
 import Favorites from '~/components/favorites'
 import SidebarToggle from '~/components/sidebar-toggle'
@@ -11,6 +11,8 @@ import ImageGrid from '~/components/image-grid'
 import Gallery from '~/components/gallery'
 
 import { fetchChatCompletion, fetchImage } from '~/services/api'
+
+import { createImage } from '~/utils/image-action'
 
 export default function Home() {
   const [
@@ -44,14 +46,42 @@ export default function Home() {
 
   const tempImageGridsKeys = Object.keys(tempImageGrids)
 
-  const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ImageGen[] }[]>([])
-  const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ImageGen[] }[]>([])
+  const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ActiveImageGen[] }[]>([])
+  const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ActiveImageGen[] }[]>([])
 
   useEffect(() => {
     if (debouncedQuery.length > 0) {
-      fetchImage(debouncedQuery)
+      ;(async function () {
+        const result = await fetchImage(debouncedQuery)
+
+        console.log('result', result)
+        if (result) {
+          if (activeImage) {
+            // const { id, isFavorite } = activeImage
+            // const data: ImageGen[] = [
+            //   {
+            //     id,
+            //     isFavorite,
+            //     src: 'https://placehold.co/390',
+            //     alt: debouncedQuery,
+            //   },
+            // ]
+            // // apply newly generated image to the active image
+            // addTempImage({ [activeImage.id]: data })
+          } else {
+            // create a new entry in the temp image grids
+            const { groupId, imageData } = createImage({
+              src: result.images[0].url,
+              alt: result.prompt,
+            })
+
+            addTempImage({ [groupId]: [imageData] })
+            setActiveImage({ ...imageData, groupId })
+          }
+        }
+      })()
     }
-  }, [debouncedQuery, activeImage])
+  }, [debouncedQuery, activeImage, addTempImage, setActiveImage])
 
   useEffect(() => {
     // debounce query by 800 ms
@@ -61,8 +91,8 @@ export default function Home() {
 
   useEffect(() => {
     const keys = Object.keys(tempImageGrids)
-    const singleGroup: { id: string; data: ImageGen[] }[] = []
-    const fiveGroup: { id: string; data: ImageGen[] }[] = []
+    const singleGroup: { id: string; data: ActiveImageGen[] }[] = []
+    const fiveGroup: { id: string; data: ActiveImageGen[] }[] = []
 
     if (keys.length > 0) {
       keys.forEach((key) => {
@@ -88,7 +118,7 @@ export default function Home() {
   }, [setFavorites])
 
   const handleArrange = () => {
-    const tempGirds: ImageGen[] = []
+    const tempGirds: ActiveImageGen[] = []
 
     tempImageGridsKeys.forEach((key) => {
       if (tempImageGrids[key].length > 0) {

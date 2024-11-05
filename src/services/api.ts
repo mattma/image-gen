@@ -2,24 +2,22 @@ import { fal } from '~/services/fal'
 
 const openaiApiKey = process.env.NEXT_PUBLIC_OPENAI_API_KEY
 
-export const fetchImage = async (prompt: string, numOfImages = 1) => {
-  console.log('fetching image', prompt)
-  // const result = await fal.subscribe('fal-ai/flux/schnell', {
-  //   input: {
-  //   prompt,
-  //   image_size: 'square',
-  //   num_images: numOfImages,
-  // },
-  // logs: true,
-  //   onQueueUpdate: (update) => {
-  //     if (update.status === 'IN_PROGRESS') {
-  //       update.logs.map((log) => log.message).forEach(console.log)
-  //     }
-  //   },
-  // })
+export const fetchImage = async (prompt: string, numOfImages = 1): Promise<FalResult> => {
+  const result = await fal.subscribe('fal-ai/flux/schnell', {
+    input: {
+      prompt,
+      image_size: 'square',
+      num_images: numOfImages,
+    },
+    logs: true,
+    onQueueUpdate: (update) => {
+      if (update.status === 'IN_PROGRESS') {
+        update.logs.map((log) => log.message).forEach(console.log)
+      }
+    },
+  })
 
-  // console.log(result.data)
-  // console.log(result.requestId)
+  return result.data
 }
 
 export const fetchChatCompletion = async (message: string) => {
@@ -43,4 +41,21 @@ export const fetchChatCompletion = async (message: string) => {
   console.log('data', data)
 
   return data.choices[0].message.content
+}
+
+interface FalResult {
+  images: FalImage[]
+  timings: {
+    inference: number
+  }
+  seed: number
+  has_nsfw_concepts: boolean[]
+  prompt: string
+}
+
+interface FalImage {
+  url: string
+  width: number
+  height: number
+  content_type: string
 }
