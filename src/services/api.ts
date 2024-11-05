@@ -25,7 +25,7 @@ export const fetchImage = async (prompt: string, numOfImages = 1): Promise<FalRe
   }
 }
 
-export const fetchChatCompletion = async (message: string) => {
+export const fetchChatCompletion = async (message: string): Promise<string[] | null> => {
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -59,13 +59,14 @@ export const fetchChatCompletion = async (message: string) => {
 
     if (!response.ok) {
       console.error('Network response was not ok')
+      return null
     }
 
     const data = await response.json()
     const content = data.choices[0].message.content
-    const prompts = JSON.parse(content)
+    const json = JSON.parse(content)
 
-    return prompts
+    return json.prompts
   } catch (error) {
     console.error('Error fetching chat completion', error)
     return null

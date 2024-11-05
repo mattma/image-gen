@@ -24,8 +24,8 @@ const temp = (): ImageGen[] => {
   return [
     {
       id: uuid(),
-      src: 'https://placehold.co/180',
-      alt: '1 Lorem ipsum dolor sit amet',
+      src: 'https://fal.media/files/panda/-iQ0LwOBGnxckTYmK3BnN.png',
+      alt: 'art deco poster advertising moon travel',
       isFavorite: false,
     },
     {

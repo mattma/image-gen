@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid'
 
 import type { ImageGen } from '~/stores/app'
 
-import { fetchImage } from '~/services/api'
+import { fetchChatCompletion, fetchImage } from '~/services/api'
 
 export function addImage(image: ImageGen): Record<string, ImageGen[]> {
   const gridId = uuid()
@@ -29,16 +29,29 @@ export function removeImage(index: number, grids: ImageGen[]): ImageGen[] | null
 }
 
 async function generate(prompt: string, count: number): Promise<ImageGen[] | null> {
-  const result = await fetchImage(prompt, count)
+  const prompts = await fetchChatCompletion(prompt)
 
-  if (result) {
-    console.log('result', result)
-    const images = result.images.map((image) => ({
-      id: uuid(),
-      src: image.url,
-      alt: prompt,
-      isFavorite: false,
-    }))
+  if (prompts && prompts.length > 0) {
+    if (count === 4 && prompts.length === 5) {
+      prompts.pop()
+    }
+
+    console.log('prompts', prompts)
+
+    const images = await Promise.all(
+      prompts.map(async (alt: string) => {
+        const result = await fetchImage(alt, count)
+
+        return {
+          id: uuid(),
+          src: result?.images[0].url ?? '',
+          alt,
+          isFavorite: false,
+        }
+      }),
+    )
+
+    console.log('images', images)
 
     return images
   }

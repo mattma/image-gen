@@ -10,7 +10,7 @@ import SidebarToggle from '~/components/sidebar-toggle'
 import ImageGrid from '~/components/image-grid'
 import Gallery from '~/components/gallery'
 
-import { fetchChatCompletion, fetchImage } from '~/services/api'
+import { fetchImage } from '~/services/api'
 
 export default function Home() {
   const [
@@ -49,21 +49,10 @@ export default function Home() {
   const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ActiveImageGen[] }[]>([])
   const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ActiveImageGen[] }[]>([])
 
-  // useEffect(() => {
-  //   async function generatePrompt() {
-  //     const result = await fetchChatCompletion('art deco poster advertising moon travel')
-  //     console.log('prompts', result)
-  //   }
-
-  //   generatePrompt()
-  // }, [])
-
   useEffect(() => {
     if (debouncedQuery.length > 0) {
       ;(async function () {
         const result = await fetchImage(debouncedQuery)
-
-        console.log('result', result)
 
         if (result) {
           // create a new entry in the temp image grids
