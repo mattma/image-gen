@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type ChangeEvent } from 'react'
 import { useShallow } from 'zustand/shallow'
 
 import { useAppStore, type ImageGen } from '~/stores/app'
 
 import Favorites from '~/components/favorites'
 import SidebarToggle from '~/components/sidebar-toggle'
-import Search from '~/components/search'
 import ImageGrid from '~/components/image-grid'
 import Gallery from '~/components/gallery'
+
+import { fetchChatCompletion, fetchImage } from '~/services/api'
 
 export default function Home() {
   const [girds, tempImageGrids, favorites, setGrids, addTempImage, removeTempImage, setFavorites] =
@@ -26,6 +27,7 @@ export default function Home() {
     )
 
   const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
@@ -33,6 +35,18 @@ export default function Home() {
 
   const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ImageGen[] }[]>([])
   const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ImageGen[] }[]>([])
+
+  useEffect(() => {
+    if (debouncedQuery.length > 0) {
+      fetchImage(debouncedQuery)
+    }
+  }, [debouncedQuery])
+
+  useEffect(() => {
+    // debounce query by 800 ms
+    const timeoutId = setTimeout(() => setDebouncedQuery(query), 800)
+    return () => clearTimeout(timeoutId)
+  }, [query])
 
   useEffect(() => {
     const keys = Object.keys(tempImageGrids)
@@ -108,8 +122,14 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-center">Live Image Generation</h1>
 
           <div className="my-4 flex gap-2 justify-center">
-            <Search query={query} setQuery={setQuery} />
+            <input
+              type="text"
+              value={query}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+              className="block w-96 px-4 py-2 rounded-md border border-gray-500"
+            />
 
+            {/* <button onClick={() => fetchImage(query)}>Search</button> */}
             <button
               className="block px-4 py-2 bg-gradient-to-r from-violet-700 to-blue-500 text-white ring-1 ring-inset ring-white/20 rounded-md font-medium"
               onClick={handleArrange}
