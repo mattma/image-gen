@@ -13,18 +13,29 @@ import Gallery from '~/components/gallery'
 import { fetchChatCompletion, fetchImage } from '~/services/api'
 
 export default function Home() {
-  const [girds, tempImageGrids, favorites, setGrids, addTempImage, removeTempImage, setFavorites] =
-    useAppStore(
-      useShallow((state) => [
-        state.grids,
-        state.tempImageGrids,
-        state.favorites,
-        state.setGrids,
-        state.addTempImage,
-        state.removeTempImage,
-        state.setFavorites,
-      ]),
-    )
+  const [
+    girds,
+    tempImageGrids,
+    favorites,
+    activeImage,
+    setGrids,
+    addTempImage,
+    removeTempImage,
+    setFavorites,
+    setActiveImage,
+  ] = useAppStore(
+    useShallow((state) => [
+      state.grids,
+      state.tempImageGrids,
+      state.favorites,
+      state.activeImage,
+      state.setGrids,
+      state.addTempImage,
+      state.removeTempImage,
+      state.setFavorites,
+      state.setActiveImage,
+    ]),
+  )
 
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
@@ -40,7 +51,7 @@ export default function Home() {
     if (debouncedQuery.length > 0) {
       fetchImage(debouncedQuery)
     }
-  }, [debouncedQuery])
+  }, [debouncedQuery, activeImage])
 
   useEffect(() => {
     // debounce query by 800 ms
@@ -146,9 +157,11 @@ export default function Home() {
                 id={group.id}
                 level={level}
                 grids={group.data}
+                activeImageId={activeImage?.id}
                 addTempImage={addTempImage}
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
+                setActiveImage={setActiveImage}
               />
             </div>
           ))}
@@ -159,10 +172,12 @@ export default function Home() {
                 id={single.id}
                 level={level}
                 grids={single.data}
+                activeImageId={activeImage?.id}
                 isSingle={true}
                 addTempImage={addTempImage}
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
+                setActiveImage={setActiveImage}
               />
             </div>
           ))}

@@ -10,9 +10,10 @@ interface ImageGridItemProps {
   level: number
   isSingle: boolean
   hoverState: { hover: boolean; index: number }
-
+  activeImageId?: string
   onImageClick: (action: Action, index: number) => void
   setHoverState: (hoverState: ImageHoverState) => void
+  setActiveImage: (image: ImageGen | null) => void
 }
 
 const ImageGridItem = ({
@@ -21,8 +22,10 @@ const ImageGridItem = ({
   level,
   isSingle,
   hoverState,
+  activeImageId,
   onImageClick,
   setHoverState,
+  setActiveImage,
 }: ImageGridItemProps) => {
   const [position, setPosition] = useState({
     x: (isSingle ? 20 : 10) * level,
@@ -42,11 +45,13 @@ const ImageGridItem = ({
         top: `${top}px`,
         left: `${left}px`,
       }}
+      onDoubleClick={() => setActiveImage(activeImageId === image.id ? null : image)}
     >
       {image.src !== '' && (
         <Img
           {...image}
           index={index}
+          activeImageId={activeImageId}
           onClick={(action: Action) => onImageClick(action, index)}
           setHoverState={setHoverState}
           handleStopPosition={setPosition}

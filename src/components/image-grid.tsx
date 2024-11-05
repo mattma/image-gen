@@ -13,10 +13,11 @@ interface ImageGridProps {
   level: number
   // used to determine if the image grid contains a single image
   isSingle?: boolean
-
+  activeImageId?: string
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setFavorites: (favorite: ImageGen) => void
+  setActiveImage: (image: ImageGen | null) => void
 }
 
 const ImageGrid = ({
@@ -24,9 +25,11 @@ const ImageGrid = ({
   grids,
   level,
   isSingle = false,
+  activeImageId,
   addTempImage,
   removeTempImage,
   setFavorites,
+  setActiveImage,
 }: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
@@ -67,8 +70,10 @@ const ImageGrid = ({
           level={level}
           isSingle={isSingle}
           hoverState={hoverState}
+          activeImageId={activeImageId}
           onImageClick={onImageClick}
           setHoverState={setHoverState}
+          setActiveImage={setActiveImage}
         />
       ))}
     </>

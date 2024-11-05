@@ -14,6 +14,7 @@ export type ImageHoverState = {
 
 interface ImageProps extends ImageGen {
   index?: number
+  activeImageId?: string
 
   onClick: (action: Action) => void
   setHoverState?: (drag: ImageHoverState) => void
@@ -21,10 +22,12 @@ interface ImageProps extends ImageGen {
 }
 
 const Img = ({
+  id,
   src,
   alt,
   isFavorite,
   index,
+  activeImageId,
   onClick,
   setHoverState,
   handleStopPosition,
@@ -75,7 +78,9 @@ const Img = ({
         onMouseEnter={() => handleMouseAction(true)}
         onMouseLeave={() => handleMouseAction(false)}
       >
-        <div className="w-full h-full ring-4 ring-gray-300 group-hover:ring-violet-500">
+        <div
+          className={`w-full h-full ring-4 ${activeImageId === id ? 'ring-red-500' : 'ring-gray-300 group-hover:ring-violet-500'}`}
+        >
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
 
