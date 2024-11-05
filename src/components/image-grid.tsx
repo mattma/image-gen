@@ -34,6 +34,7 @@ const ImageGrid = ({
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
   const onImageClick = async (action: Action, index: number) => {
+    console.log('action', action, id, index, grids)
     switch (action) {
       case 'ADD':
         const addData = addImage(grids[index])
@@ -46,8 +47,13 @@ const ImageGrid = ({
         break
 
       case 'GENERATE':
-        const generateData = await generateImage(id, index, grids)
+        const generateData = await generateImage(grids[index])
         addTempImage(generateData)
+
+        // remove the current image because we are generating a new grid with the current image as the center
+        const removeCurrentData = removeImage(index, grids)
+        removeTempImage(id, removeCurrentData)
+
         break
 
       case 'FAVORITE':

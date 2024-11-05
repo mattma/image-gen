@@ -28,19 +28,26 @@ export function removeImage(index: number, grids: ImageGen[]): ImageGen[] | null
   return ret
 }
 
-async function generate(prompt: string, count: number): Promise<ImageGen[] | null> {
+// function generate(prompt: string): Promise<ImageGen[]> {
+//   return Promise.resolve(
+//     Array.from({ length: 4 }, () => ({
+//       src: 'https://placehold.co/180',
+//       alt: prompt,
+//       isFavorite: false,
+//       id: uuid(),
+//     })),
+//   )
+// }
+
+async function generate(prompt: string): Promise<ImageGen[] | null> {
   const prompts = await fetchChatCompletion(prompt)
 
   if (prompts && prompts.length > 0) {
-    if (count === 4 && prompts.length === 5) {
-      prompts.pop()
-    }
-
     console.log('prompts', prompts)
 
     const images = await Promise.all(
       prompts.map(async (alt: string) => {
-        const result = await fetchImage(alt, count)
+        const result = await fetchImage(alt)
 
         return {
           id: uuid(),
@@ -59,34 +66,18 @@ async function generate(prompt: string, count: number): Promise<ImageGen[] | nul
   return null
 }
 
-export async function generateImage(
-  id: string | null,
-  index: number,
-  grids: ImageGen[],
-): Promise<Record<string, ImageGen[]>> {
-  id = id ?? uuid() // if id is null, generate a new uuid for grid id
-
-  const size = grids.length
+export async function generateImage(image: ImageGen): Promise<Record<string, ImageGen[]>> {
   let ret = {}
+  const gridId = uuid()
+  const newGrids = await generate(image.alt)
 
-  // if grid size is 5, generate another 5 images in a new grid
-  // otherwise, generate 4 more images in the current grid, keep the current index image in the middle
-  if (size === 5) {
-    const newId = uuid()
+  if (newGrids) {
+    // make sure the new image has a new id
+    const newImage = { ...image, id: uuid(), isFavorite: false }
 
-    ret = { [newId]: generate('', 5) }
-  } else if (size === 1) {
-    const alt = grids[index].alt
-    const newGrids = await generate(alt, 4)
+    newGrids.splice(2, 0, newImage)
 
-    if (newGrids) {
-      // make sure the new image has a new id
-      const newImage = { ...grids[index], id: uuid(), isFavorite: false }
-
-      newGrids.splice(2, 0, newImage)
-
-      ret = { [id as string]: newGrids }
-    }
+    ret = { [gridId]: newGrids }
   }
 
   return ret

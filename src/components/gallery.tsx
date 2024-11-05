@@ -29,7 +29,7 @@ const Gallery = ({ grids, addTempImage, setGrids, setFavorites }: GalleryProps) 
 
       case 'GENERATE':
         // generate a new UUID, and set current image as the center in new image grid
-        const generateData = await generateImage(null, 0, [grids[index]])
+        const generateData = await generateImage(grids[index])
         addTempImage(generateData)
 
         // remove the current image from the grid
