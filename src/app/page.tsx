@@ -119,7 +119,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative h-[60%] bg-gray-100">
+        <div className="relative h-[60%]">
           {tempGridFive.map((group, level) => (
             <div key={group.id} className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
               <ImageGrid
@@ -134,7 +134,7 @@ export default function Home() {
           ))}
 
           {tempGridSingle.map((single, level) => (
-            <div key={single.id} className="">
+            <div key={single.id} className="absolute top-0 left-0">
               <ImageGrid
                 id={single.id}
                 level={level}

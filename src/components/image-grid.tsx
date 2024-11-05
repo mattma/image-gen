@@ -11,6 +11,8 @@ interface ImageGridProps {
   id: string
   grids: ImageGen[]
   level: number
+  // used to determine if the image grid contains a single image
+  isSingle?: boolean
 
   addTempImage: (data: Record<string, ImageGen[]>) => void
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
@@ -21,6 +23,7 @@ const ImageGrid = ({
   id,
   grids,
   level,
+  isSingle = false,
   addTempImage,
   removeTempImage,
   setFavorites,
@@ -62,6 +65,7 @@ const ImageGrid = ({
           image={image}
           index={index}
           level={level}
+          isSingle={isSingle}
           hoverState={hoverState}
           onImageClick={onImageClick}
           setHoverState={setHoverState}
