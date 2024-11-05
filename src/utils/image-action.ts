@@ -2,6 +2,8 @@ import { v4 as uuid } from 'uuid'
 
 import type { ImageGen } from '~/stores/app'
 
+import { fetchImage } from '~/services/api'
+
 export function addImage(image: ImageGen): Record<string, ImageGen[]> {
   const gridId = uuid()
   const imageId = uuid()
@@ -26,20 +28,29 @@ export function removeImage(index: number, grids: ImageGen[]): ImageGen[] | null
   return ret
 }
 
-function generate(count: number): ImageGen[] {
-  return Array.from({ length: count }, () => ({
-    id: uuid(),
-    src: 'https://placehold.co/180',
-    alt: 'generated',
-    isFavorite: false,
-  }))
+async function generate(prompt: string, count: number): Promise<ImageGen[] | null> {
+  const result = await fetchImage(prompt, count)
+
+  if (result) {
+    console.log('result', result)
+    const images = result.images.map((image) => ({
+      id: uuid(),
+      src: image.url,
+      alt: prompt,
+      isFavorite: false,
+    }))
+
+    return images
+  }
+
+  return null
 }
 
-export function generateImage(
+export async function generateImage(
   id: string | null,
   index: number,
   grids: ImageGen[],
-): Record<string, ImageGen[]> {
+): Promise<Record<string, ImageGen[]>> {
   id = id ?? uuid() // if id is null, generate a new uuid for grid id
 
   const size = grids.length
@@ -50,15 +61,19 @@ export function generateImage(
   if (size === 5) {
     const newId = uuid()
 
-    ret = { [newId]: generate(5) }
+    ret = { [newId]: generate('', 5) }
   } else if (size === 1) {
-    const newGrids = generate(4)
-    // make sure the new image has a new id
-    const newImage = { ...grids[index], id: uuid(), isFavorite: false }
+    const alt = grids[index].alt
+    const newGrids = await generate(alt, 4)
 
-    newGrids.splice(2, 0, newImage)
+    if (newGrids) {
+      // make sure the new image has a new id
+      const newImage = { ...grids[index], id: uuid(), isFavorite: false }
 
-    ret = { [id as string]: newGrids }
+      newGrids.splice(2, 0, newImage)
+
+      ret = { [id as string]: newGrids }
+    }
   }
 
   return ret

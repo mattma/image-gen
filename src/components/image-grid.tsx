@@ -33,7 +33,7 @@ const ImageGrid = ({
 }: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
-  const onImageClick = (action: Action, index: number) => {
+  const onImageClick = async (action: Action, index: number) => {
     switch (action) {
       case 'ADD':
         const addData = addImage(grids[index])
@@ -46,7 +46,7 @@ const ImageGrid = ({
         break
 
       case 'GENERATE':
-        const generateData = generateImage(id, index, grids)
+        const generateData = await generateImage(id, index, grids)
         addTempImage(generateData)
         break
 

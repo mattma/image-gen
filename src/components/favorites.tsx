@@ -23,8 +23,8 @@ export default function Favorites({ favorites, setFavorites, addTempImage }: Fav
     },
     {
       icon: '!',
-      onClick: (favorite: ImageGen) => {
-        const generateData = generateImage(null, 0, [favorite])
+      onClick: async (favorite: ImageGen) => {
+        const generateData = await generateImage(null, 0, [favorite])
         addTempImage(generateData)
       },
       className: 'pt-[1.5px]',

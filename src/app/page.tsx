@@ -166,7 +166,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative h-[60%] z-50">
+        <div className="relative h-[60%]">
           {tempGridFive.map((group, level) => (
             <div key={group.id} className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
               <ImageGrid
