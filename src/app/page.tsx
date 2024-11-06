@@ -122,7 +122,8 @@ export default function Home() {
 
   // update the query input box with the active image prompt text, or the most recently generated image (last item in the 4 generated images) prompt text
   const updatePromptText = (prompt: string) => {
-    if (queryRef.current) {
+    // if the prompt is 'Loading...', don't update the query input box
+    if (queryRef.current && prompt !== 'Loading...') {
       queryRef.current.value = prompt
     }
   }

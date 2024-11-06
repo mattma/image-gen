@@ -80,7 +80,12 @@ const Img = ({
   }
 
   return (
-    <Draggable nodeRef={nodeRef} position={position} onStop={handleStop}>
+    <Draggable
+      nodeRef={nodeRef}
+      position={position}
+      onStop={handleStop}
+      disabled={src.endsWith('/loading.webp')}
+    >
       <div
         ref={nodeRef}
         className={`relative group w-[180px] h-[180px] hover:cursor-grab ${isDeleted ? 'hidden' : ''}`}
@@ -93,9 +98,17 @@ const Img = ({
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
 
-        <Heart isFavorite={isFavorite} setFavorite={() => onClick('FAVORITE')} />
+        <Heart
+          isFavorite={isFavorite}
+          setFavorite={() => onClick('FAVORITE')}
+          className={`${src.endsWith('/loading.webp') ? 'hidden' : ''}`}
+        />
 
-        <div className="absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+        <div
+          className={`absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 ${
+            src.endsWith('/loading.webp') ? 'hidden' : ''
+          }`}
+        >
           {actions.map((action) => (
             <div
               key={action.icon}

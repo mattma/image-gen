@@ -46,9 +46,14 @@ const ImageGridItem = ({
         top: `${top}px`,
         left: `${left}px`,
       }}
-      onDoubleClick={() =>
+      onDoubleClick={() => {
+        // if the image is still loading, don't activate it
+        if (image.src.endsWith('/loading.webp')) {
+          return
+        }
+
         setActiveImage(activeImageId === image.id ? null : { ...image, groupId })
-      }
+      }}
     >
       {image.src !== '' && (
         <Img
