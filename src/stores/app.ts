@@ -21,14 +21,19 @@ export interface ActiveImageGen extends ImageGen {
   groupId?: string
 }
 
+export type TempImageGridData = {
+  images: ImageGen[]
+  position: { x: number; y: number }
+}
+
 export interface AppProps {
   grids: ImageGen[]
-  tempImageGrids: Record<string, ImageGen[]>
+  tempImageGrids: Record<string, TempImageGridData>
   favorites: ImageGen[]
   activeImage: ActiveImageGen | null
 
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
-  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
+  addTempImage: (data: Record<string, TempImageGridData>, activeImage?: ActiveImageGen) => void
   removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) => void
   setFavorites: (favorite: ImageGen | ImageGen[], scan?: boolean) => void
   setActiveImage: (image: ActiveImageGen | null) => void
@@ -55,7 +60,7 @@ export const useAppStore = create<AppProps>()(
       }),
 
     // optionally, when duplicate or add a new image, by default, it will set it as active
-    addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) =>
+    addTempImage: (data: Record<string, TempImageGridData>, activeImage?: ActiveImageGen) =>
       set(() => {
         const latest = get()
         const tempImageGrids = { ...latest.tempImageGrids, ...data }
@@ -71,7 +76,7 @@ export const useAppStore = create<AppProps>()(
         let activeImage = latest.activeImage
 
         if (grids) {
-          tempImageGrids[id] = grids
+          tempImageGrids[id] = { images: grids, position: tempImageGrids[id].position }
         } else {
           delete tempImageGrids[id]
         }
@@ -112,20 +117,23 @@ export const useAppStore = create<AppProps>()(
                 : image,
             )
 
-            tempImageGrids = Object.keys(tempImageGrids).reduce<Record<string, ImageGen[]>>(
+            tempImageGrids = Object.keys(tempImageGrids).reduce<Record<string, TempImageGridData>>(
               (acc, key) => {
-                acc[key] = tempImageGrids[key].map((image) =>
-                  image.id === favorite.id
-                    ? {
-                        ...image,
-                        isFavorite: false,
-                      }
-                    : image,
-                )
+                acc[key] = {
+                  images: tempImageGrids[key].images.map((image) =>
+                    image.id === favorite.id
+                      ? {
+                          ...image,
+                          isFavorite: false,
+                        }
+                      : image,
+                  ),
+                  position: tempImageGrids[key].position,
+                }
                 return acc
               },
               {},
-            ) as Record<string, ImageGen[]>
+            ) as Record<string, TempImageGridData>
           }
         }
 
@@ -150,7 +158,7 @@ export const useAppStore = create<AppProps>()(
         return {
           tempImageGrids: {
             ...tempImageGrids,
-            [groupId]: [updatedActiveImage],
+            [groupId]: { images: [updatedActiveImage], position: { x: 0, y: 0 } },
           },
           activeImage: { ...updatedActiveImage, groupId },
         }

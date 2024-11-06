@@ -12,6 +12,12 @@ import SidebarToggle from '~/components/sidebar-toggle'
 
 import { fetchImage } from '~/services/api'
 
+type TempGridData = {
+  id: string
+  data: ImageGen[]
+  position: { x: number; y: number }
+}
+
 export default function Home() {
   const [
     girds,
@@ -78,22 +84,23 @@ export default function Home() {
   }, [query])
 
   // image playground section. used to display the images that are generated or added by the user, before they are added to the gallery section. User can darg the image around or update image src via LLM
-  const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ImageGen[] }[]>([])
-  const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ImageGen[] }[]>([])
+  const [tempGridSingle, setTempGridSingle] = useState<TempGridData[]>([])
+  const [tempGridFive, setTempGridFive] = useState<TempGridData[]>([])
 
   useEffect(() => {
     const keys = Object.keys(tempImageGrids)
-    const singleGroup: { id: string; data: ImageGen[] }[] = []
-    const fiveGroup: { id: string; data: ImageGen[] }[] = []
+    const singleGroup: TempGridData[] = []
+    const fiveGroup: TempGridData[] = []
 
     if (keys.length > 0) {
       keys.forEach((key) => {
-        const gridSize = tempImageGrids[key].length
+        const { images, position } = tempImageGrids[key]
+        const gridSize = images.length
 
         if (gridSize === 1) {
-          singleGroup.push({ id: key, data: tempImageGrids[key] })
+          singleGroup.push({ id: key, data: images, position })
         } else if (gridSize === 5) {
-          fiveGroup.push({ id: key, data: tempImageGrids[key] })
+          fiveGroup.push({ id: key, data: images, position })
         }
       })
     }
@@ -107,8 +114,8 @@ export default function Home() {
     const tempGirds: ActiveImageGen[] = []
 
     Object.keys(tempImageGrids).forEach((key) => {
-      if (tempImageGrids[key].length > 0) {
-        for (const image of tempImageGrids[key]) {
+      if (tempImageGrids[key].images.length > 0) {
+        for (const image of tempImageGrids[key].images) {
           // Add to the beginning of the array if image is not empty
           if (image && image.src !== '') {
             tempGirds.unshift(image)
@@ -187,18 +194,17 @@ export default function Home() {
         </div>
 
         <div className="h-[60%]">
-          {tempGridFive.map((group, level) => (
+          {tempGridFive.map((group) => (
             <div
               key={group.id}
               className="absolute w-[580px] grid grid-rows-3 grid-cols-3 gap-4"
               style={{
-                top: `${1134 - 355}px`,
-                left: `${1160 - 350}px`,
+                top: `${group.position.y}px`,
+                left: `${group.position.x}px`,
               }}
             >
               <ImageGrid
                 id={group.id}
-                level={level}
                 grids={group.data}
                 activeImageId={activeImage?.id}
                 addTempImage={addTempImage}
@@ -210,12 +216,17 @@ export default function Home() {
             </div>
           ))}
 
-          <div className="absolute top-0 left-0">
-            {tempGridSingle.map((single, level) => (
+          {tempGridSingle.map((single) => (
+            <div
+              key={single.id}
+              className="absolute top-0 left-0"
+              style={{
+                top: `${single.position.y}px`,
+                left: `${single.position.x}px`,
+              }}
+            >
               <ImageGrid
-                key={single.id}
                 id={single.id}
-                level={level}
                 grids={single.data}
                 activeImageId={activeImage?.id}
                 isSingle={true}
@@ -225,8 +236,8 @@ export default function Home() {
                 setActiveImage={handleSetActiveImage}
                 updatePromptText={updatePromptText}
               />
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
 
         <Gallery

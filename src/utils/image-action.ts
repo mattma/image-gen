@@ -51,14 +51,10 @@ async function generate(prompt: string): Promise<ImageGen[] | null> {
   return null
 }
 
-export async function generateImage(
-  image: ImageGen,
-  gridId: string,
-): Promise<{
-  data: Record<string, ImageGen[]>
+export async function generateImage(image: ImageGen): Promise<{
+  data: ImageGen[] | null
   prompt: string
 }> {
-  let ret = {}
   const newGrids = await generate(image.alt)
   let prompt = image.alt
 
@@ -68,11 +64,10 @@ export async function generateImage(
 
     newGrids.splice(2, 0, newImage)
 
-    ret = { [gridId]: newGrids }
     prompt = newGrids[newGrids.length - 1].alt
   }
 
-  return { data: ret, prompt }
+  return { data: newGrids, prompt }
 }
 
 // generate a default image array with a loading image

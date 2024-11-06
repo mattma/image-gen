@@ -1,6 +1,6 @@
 import { type MouseEvent } from 'react'
 
-import type { ActiveImageGen, ImageGen, SetGridOptions } from '~/stores/app'
+import type { ActiveImageGen, ImageGen, SetGridOptions, TempImageGridData } from '~/stores/app'
 
 import Img, { type Action } from '~/components/image'
 
@@ -9,7 +9,7 @@ import { addImage, generateImage, generateDefaultImage } from '~/utils/image-act
 type GalleryProps = {
   grids: ImageGen[]
 
-  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
+  addTempImage: (data: Record<string, TempImageGridData>, activeImage?: ActiveImageGen) => void
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
   setFavorites: (favorite: ImageGen) => void
   updatePromptText: (text: string) => void
@@ -27,7 +27,10 @@ const Gallery = ({
       case 'ADD':
         const { gridId: imageGridId, data: addData } = addImage(grids[index])
         const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
-        addTempImage({ [imageGridId]: addData }, activeImage)
+        addTempImage(
+          { [imageGridId]: { images: addData, position: { x: e.pageX, y: e.pageY } } },
+          activeImage,
+        )
         updatePromptText(grids[index].alt)
         break
 
@@ -39,14 +42,18 @@ const Gallery = ({
         break
 
       case 'GENERATE':
+        const position = { x: e.pageX - 350, y: e.pageY - 355 }
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(grids[index])
-        addTempImage({ [gridId]: defaultImages })
+        addTempImage({ [gridId]: { images: defaultImages, position } })
 
         // generate a new UUID, and set current image as the center in new image grid
-        const { data: generateData, prompt } = await generateImage(grids[index], gridId)
-        addTempImage(generateData)
-        updatePromptText(prompt)
+        const { data: generateData, prompt } = await generateImage(grids[index])
+
+        if (generateData) {
+          addTempImage({ [gridId]: { images: generateData, position } })
+          updatePromptText(prompt)
+        }
 
         // remove the current image from the grid
         const updatedGrids = [...grids]

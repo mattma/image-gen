@@ -7,7 +7,6 @@ import Img, { type Action, type ImageHoverState } from '~/components/image'
 interface ImageGridItemProps {
   image: ImageGen
   index: number
-  level: number
   isSingle: boolean
   hoverState: { hover: boolean; index: number }
   activeImageId?: string
@@ -20,7 +19,6 @@ interface ImageGridItemProps {
 const ImageGridItem = ({
   image,
   index,
-  level,
   isSingle,
   hoverState,
   activeImageId,
@@ -29,9 +27,7 @@ const ImageGridItem = ({
   setHoverState,
   setActiveImage,
 }: ImageGridItemProps) => {
-  const x = 30 * level
-  const y = (isSingle ? -60 : -270) * level
-  const [position, setPosition] = useState({ x, y })
+  const [position, setPosition] = useState({ x: 0, y: 0 })
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
 

@@ -1,4 +1,4 @@
-import type { ImageGen, ActiveImageGen } from '~/stores/app'
+import type { ImageGen, ActiveImageGen, TempImageGridData } from '~/stores/app'
 
 import Heart from '~/components/heart'
 
@@ -8,7 +8,7 @@ interface FavoritesProps {
   favorites: ImageGen[]
 
   setFavorites: (favorite: ImageGen, scan?: boolean) => void
-  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
+  addTempImage: (data: Record<string, TempImageGridData>, activeImage?: ActiveImageGen) => void
   updatePromptText: (prompt: string) => void
 }
 
@@ -19,7 +19,10 @@ const Favorites = ({ favorites, setFavorites, addTempImage, updatePromptText }: 
       onClick: (favorite: ImageGen) => {
         const { gridId: imageGridId, data: addData } = addImage(favorite)
         const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
-        addTempImage({ [imageGridId]: addData }, activeImage)
+        addTempImage(
+          { [imageGridId]: { images: addData, position: { x: 180, y: 180 } } },
+          activeImage,
+        )
         updatePromptText(favorite.alt)
       },
     },
@@ -28,11 +31,13 @@ const Favorites = ({ favorites, setFavorites, addTempImage, updatePromptText }: 
       onClick: async (favorite: ImageGen) => {
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(favorite)
-        addTempImage({ [gridId]: defaultImages })
+        addTempImage({ [gridId]: { images: defaultImages, position: { x: 0, y: 0 } } })
 
-        const { data: generateData, prompt } = await generateImage(favorite, gridId)
-        addTempImage(generateData)
-        updatePromptText(prompt)
+        const { data: generateData, prompt } = await generateImage(favorite)
+        if (generateData) {
+          addTempImage({ [gridId]: { images: generateData, position: { x: 0, y: 0 } } })
+          updatePromptText(prompt)
+        }
       },
       className: 'pt-[1.5px]',
     },
