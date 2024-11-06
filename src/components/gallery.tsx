@@ -37,9 +37,9 @@ const Gallery = ({
 
       case 'GENERATE':
         // generate a new UUID, and set current image as the center in new image grid
-        const generateData = await generateImage(grids[index])
+        const { data: generateData, prompt } = await generateImage(grids[index])
         addTempImage(generateData)
-        updatePromptText(grids[index].alt)
+        updatePromptText(prompt)
 
         // remove the current image from the grid
         const updatedGrids = [...grids]

@@ -66,10 +66,14 @@ async function generate(prompt: string): Promise<ImageGen[] | null> {
   return null
 }
 
-export async function generateImage(image: ImageGen): Promise<Record<string, ImageGen[]>> {
+export async function generateImage(image: ImageGen): Promise<{
+  data: Record<string, ImageGen[]>
+  prompt: string
+}> {
   let ret = {}
   const gridId = uuid()
   const newGrids = await generate(image.alt)
+  let prompt = image.alt
 
   if (newGrids) {
     // make sure the new image has a new id
@@ -78,9 +82,10 @@ export async function generateImage(image: ImageGen): Promise<Record<string, Ima
     newGrids.splice(2, 0, newImage)
 
     ret = { [gridId]: newGrids }
+    prompt = newGrids[newGrids.length - 1].alt
   }
 
-  return ret
+  return { data: ret, prompt }
 }
 
 // if the current favorite is already in the favorites list, remove it

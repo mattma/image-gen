@@ -108,9 +108,9 @@ export default function Home() {
     tempImageGridsKeys.forEach((key) => {
       if (tempImageGrids[key].length > 0) {
         for (const image of tempImageGrids[key]) {
-          // only push if image is not empty
+          // Add to the beginning of the array if image is not empty
           if (image && image.src !== '') {
-            tempGirds.push(image)
+            tempGirds.unshift(image)
           }
         }
       }
@@ -122,6 +122,15 @@ export default function Home() {
   const updatePromptText = (prompt: string) => {
     if (queryRef.current) {
       queryRef.current.value = prompt
+    }
+  }
+
+  const handleSetActiveImage = (image: ActiveImageGen | null) => {
+    setActiveImage(image)
+
+    // update the prompt text when active image is set
+    if (image) {
+      updatePromptText(image.alt)
     }
   }
 
@@ -163,7 +172,6 @@ export default function Home() {
               className="block w-96 px-4 py-2 rounded-md border border-gray-500"
             />
 
-            {/* <button onClick={() => fetchImage(query)}>Search</button> */}
             <button
               className="block px-4 py-2 bg-gradient-to-r from-violet-700 to-blue-500 text-white ring-1 ring-inset ring-white/20 rounded-md font-medium"
               onClick={handleArrange}
@@ -184,7 +192,7 @@ export default function Home() {
                 addTempImage={addTempImage}
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
-                setActiveImage={setActiveImage}
+                setActiveImage={handleSetActiveImage}
                 updatePromptText={updatePromptText}
               />
             </div>
@@ -202,7 +210,7 @@ export default function Home() {
                 addTempImage={addTempImage}
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
-                setActiveImage={setActiveImage}
+                setActiveImage={handleSetActiveImage}
                 updatePromptText={updatePromptText}
               />
             ))}

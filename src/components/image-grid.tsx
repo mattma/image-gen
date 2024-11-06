@@ -49,10 +49,9 @@ const ImageGrid = ({
         break
 
       case 'GENERATE':
-        const generateData = await generateImage(grids[index])
+        const { data: generateData, prompt } = await generateImage(grids[index])
         addTempImage(generateData)
-
-        updatePromptText(grids[index].alt)
+        updatePromptText(prompt)
 
         // remove the current image because we are generating a new grid with the current image as the center
         const removeCurrentData = removeImage(index, grids)

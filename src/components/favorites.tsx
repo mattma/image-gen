@@ -31,9 +31,9 @@ export default function Favorites({
     {
       icon: '!',
       onClick: async (favorite: ImageGen) => {
-        const generateData = await generateImage(favorite)
+        const { data: generateData, prompt } = await generateImage(favorite)
         addTempImage(generateData)
-        updatePromptText(favorite.alt)
+        updatePromptText(prompt)
       },
       className: 'pt-[1.5px]',
     },
