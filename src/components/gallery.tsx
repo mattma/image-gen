@@ -1,6 +1,6 @@
 import { type MouseEvent } from 'react'
 
-import type { ImageGen, SetGridOptions } from '~/stores/app'
+import type { ActiveImageGen, ImageGen, SetGridOptions } from '~/stores/app'
 
 import Img, { type Action } from '~/components/image'
 
@@ -9,7 +9,7 @@ import { addImage, generateImage, generateDefaultImage } from '~/utils/image-act
 type GalleryProps = {
   grids: ImageGen[]
 
-  addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
+  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
   setFavorites: (favorite: ImageGen) => void
   updatePromptText: (text: string) => void
@@ -25,8 +25,9 @@ const Gallery = ({
   const onImageClick = async (e: MouseEvent, action: Action, index: number) => {
     switch (action) {
       case 'ADD':
-        const addData = addImage(grids[index])
-        addTempImage(addData)
+        const { gridId: imageGridId, data: addData } = addImage(grids[index])
+        const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
+        addTempImage({ [imageGridId]: addData }, activeImage)
         updatePromptText(grids[index].alt)
         break
 

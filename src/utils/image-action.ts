@@ -4,11 +4,11 @@ import type { ImageGen } from '~/stores/app'
 
 import { fetchChatCompletion, fetchImage } from '~/services/api'
 
-export function addImage(image: ImageGen): Record<string, ImageGen[]> {
+export function addImage(image: ImageGen): { gridId: string; data: ImageGen[] } {
   const gridId = uuid()
   const imageId = uuid()
 
-  return { [gridId]: [{ ...image, id: imageId, isFavorite: false }] }
+  return { gridId, data: [{ ...image, id: imageId, isFavorite: false }] }
 }
 
 // if the grids size is 5, remove the image and return the new grids

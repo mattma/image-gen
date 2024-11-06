@@ -1,4 +1,4 @@
-import type { ImageGen } from '~/stores/app'
+import type { ImageGen, ActiveImageGen } from '~/stores/app'
 
 import Heart from '~/components/heart'
 
@@ -8,7 +8,7 @@ interface FavoritesProps {
   favorites: ImageGen[]
 
   setFavorites: (favorite: ImageGen, scan?: boolean) => void
-  addTempImage: (data: Record<string, ImageGen[]>) => void
+  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
   updatePromptText: (prompt: string) => void
 }
 
@@ -17,8 +17,9 @@ const Favorites = ({ favorites, setFavorites, addTempImage, updatePromptText }: 
     {
       icon: '+',
       onClick: (favorite: ImageGen) => {
-        const addData = addImage(favorite)
-        addTempImage(addData)
+        const { gridId: imageGridId, data: addData } = addImage(favorite)
+        const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
+        addTempImage({ [imageGridId]: addData }, activeImage)
         updatePromptText(favorite.alt)
       },
     },

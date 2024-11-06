@@ -7,11 +7,7 @@ type HeartProps = {
   setFavorite: (e: MouseEvent) => void
 }
 
-const Heart = ({
-  isFavorite,
-  className = 'absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300',
-  setFavorite,
-}: HeartProps) => {
+const Heart = ({ isFavorite, className = '', setFavorite }: HeartProps) => {
   return (
     <div className={`hover:cursor-pointer ${className}`} onClick={setFavorite}>
       <svg

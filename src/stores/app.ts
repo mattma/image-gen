@@ -7,6 +7,7 @@ import { updateFavoriteList } from '~/utils/image-action'
 export type SetGridOptions = {
   replace?: boolean
   emptyTempImageGrids?: boolean
+  emptyActiveImage?: boolean
 }
 
 export type ImageGen = {
@@ -27,7 +28,7 @@ export interface AppProps {
   activeImage: ActiveImageGen | null
 
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
-  addTempImage: (data: Record<string, ImageGen[]>) => void
+  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
   removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) => void
   setFavorites: (favorite: ImageGen | ImageGen[], scan?: boolean) => void
   setActiveImage: (image: ActiveImageGen | null) => void
@@ -49,15 +50,18 @@ export const useAppStore = create<AppProps>()(
         return {
           grids: options?.replace ? newGrids : [...newGrids, ...latest.grids],
           tempImageGrids: options?.emptyTempImageGrids ? {} : latest.tempImageGrids,
+          activeImage: options?.emptyActiveImage ? null : latest.activeImage,
         }
       }),
 
-    addTempImage: (data: Record<string, ImageGen[]>) =>
+    // optionally, when duplicate or add a new image, by default, it will set it as active
+    addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) =>
       set(() => {
         const latest = get()
         const tempImageGrids = { ...latest.tempImageGrids, ...data }
+        const updatedActiveImage = activeImage ? activeImage : latest.activeImage
 
-        return { tempImageGrids }
+        return { tempImageGrids, activeImage: updatedActiveImage }
       }),
 
     removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) =>

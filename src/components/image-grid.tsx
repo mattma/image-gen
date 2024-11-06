@@ -14,7 +14,7 @@ interface ImageGridProps {
   // used to determine if the image grid contains a single image
   isSingle?: boolean
   activeImageId?: string
-  addTempImage: (data: Record<string, ImageGen[]>) => void
+  addTempImage: (data: Record<string, ImageGen[]>, activeImage?: ActiveImageGen) => void
   removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) => void
   setFavorites: (favorite: ImageGen) => void
   setActiveImage: (image: ActiveImageGen | null) => void
@@ -38,8 +38,9 @@ const ImageGrid = ({
   const onImageClick = async (e: MouseEvent, action: Action, index: number) => {
     switch (action) {
       case 'ADD':
-        const addData = addImage(grids[index])
-        addTempImage(addData)
+        const { gridId: imageGridId, data: addData } = addImage(grids[index])
+        const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
+        addTempImage({ [imageGridId]: addData }, activeImage)
         updatePromptText(grids[index].alt)
         break
 

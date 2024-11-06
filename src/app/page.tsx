@@ -117,7 +117,7 @@ export default function Home() {
       }
     })
 
-    setGrids(tempGirds, { emptyTempImageGrids: true })
+    setGrids(tempGirds, { emptyTempImageGrids: true, emptyActiveImage: true })
   }
 
   // update the query input box with the active image prompt text, or the most recently generated image (last item in the 4 generated images) prompt text

@@ -98,11 +98,13 @@ const Img = ({
           <img src={src} alt={alt} className="w-full h-full object-cover" />
         </div>
 
-        <Heart
-          isFavorite={isFavorite}
-          setFavorite={(e: MouseEvent) => onClick(e, 'FAVORITE')}
-          className={`${src.endsWith('/loading.webp') ? 'hidden' : ''}`}
-        />
+        <div className="absolute top-2 right-2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          <Heart
+            isFavorite={isFavorite}
+            setFavorite={(e: MouseEvent) => onClick(e, 'FAVORITE')}
+            className={`${src.endsWith('/loading.webp') ? 'hidden' : ''}`}
+          />
+        </div>
 
         <div
           className={`absolute bottom-2 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20 ${
