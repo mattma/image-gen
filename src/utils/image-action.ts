@@ -28,17 +28,6 @@ export function removeImage(index: number, grids: ImageGen[]): ImageGen[] | null
   return ret
 }
 
-// function generate(prompt: string): Promise<ImageGen[]> {
-//   return Promise.resolve(
-//     Array.from({ length: 4 }, () => ({
-//       src: 'https://placehold.co/180',
-//       alt: prompt,
-//       isFavorite: false,
-//       id: uuid(),
-//     })),
-//   )
-// }
-
 async function generate(prompt: string): Promise<ImageGen[] | null> {
   const prompts = await fetchChatCompletion(prompt)
 

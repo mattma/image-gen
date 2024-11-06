@@ -15,7 +15,7 @@ interface ImageGridProps {
   isSingle?: boolean
   activeImageId?: string
   addTempImage: (data: Record<string, ImageGen[]>) => void
-  removeTempImage: (id: string, grids: ImageGen[] | null) => void
+  removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) => void
   setFavorites: (favorite: ImageGen) => void
   setActiveImage: (image: ActiveImageGen | null) => void
   updatePromptText: (text: string) => void
@@ -44,8 +44,9 @@ const ImageGrid = ({
         break
 
       case 'REMOVE':
+        const removeImageId = grids[index].id
         const removeData = removeImage(index, grids)
-        removeTempImage(id, removeData)
+        removeTempImage(id, removeData, removeImageId)
         break
 
       case 'GENERATE':
@@ -54,8 +55,9 @@ const ImageGrid = ({
         updatePromptText(prompt)
 
         // remove the current image because we are generating a new grid with the current image as the center
+        const removedImageId = grids[index].id
         const removeCurrentData = removeImage(index, grids)
-        removeTempImage(id, removeCurrentData)
+        removeTempImage(id, removeCurrentData, removedImageId)
 
         break
 

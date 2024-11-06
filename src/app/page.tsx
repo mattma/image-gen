@@ -154,7 +154,7 @@ export default function Home() {
 
       <section className="relative flex-1 space-y-8 px-8 overflow-y-auto">
         <div
-          className="absolute top-4 left-2 hover:opacity-75 hover:cursor-pointer"
+          className={`fixed top-4 hover:opacity-75 hover:cursor-pointer transition-left duration-300 ${isSidebarOpen ? 'left-36' : 'left-2'}`}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
           <SidebarToggle />

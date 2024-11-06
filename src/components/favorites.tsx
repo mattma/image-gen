@@ -53,9 +53,13 @@ export default function Favorites({
       {favorites.map((favorite) => (
         <div
           key={favorite.id}
-          className="relative w-24 h-24 ring-2 ring-gray-300 group-hover:ring-violet-500"
+          className="group relative w-24 h-24 ring-2 ring-gray-300 hover:ring-violet-500"
         >
-          <img src={favorite.src} alt={favorite.alt} className="w-full h-full object-cover" />
+          <img
+            src={favorite.src}
+            alt={favorite.alt}
+            className="w-full h-full object-cover group-hover:opacity-75"
+          />
 
           <Heart
             isFavorite={true}

@@ -63,7 +63,7 @@ export interface AppProps {
 
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
   addTempImage: (data: Record<string, ImageGen[]>) => void
-  removeTempImage: (id: string, grids: ImageGen[] | null, removeIndex?: number) => void
+  removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) => void
   setFavorites: (favorite: ImageGen | ImageGen[], scan?: boolean) => void
   setActiveImage: (image: ActiveImageGen | null) => void
   setCurrentImageGen: (image: Pick<ImageGen, 'src' | 'alt'>) => void
@@ -95,7 +95,7 @@ export const useAppStore = create<AppProps>()(
         return { tempImageGrids }
       }),
 
-    removeTempImage: (id: string, grids: ImageGen[] | null, removeIndex?: number) =>
+    removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) =>
       set(() => {
         const latest = get()
         const tempImageGrids = { ...latest.tempImageGrids }
@@ -107,10 +107,8 @@ export const useAppStore = create<AppProps>()(
           delete tempImageGrids[id]
         }
 
-        console.log('activeImage', activeImage, id, grids)
-
         // if the active image is the one being removed, set it to null
-        if (activeImage?.groupId === id && removeIndex === 2) {
+        if (activeImage?.id === removeImageId) {
           activeImage = null
         }
 
