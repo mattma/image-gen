@@ -6,6 +6,7 @@ import type { Action, ImageHoverState } from '~/components/image'
 import ImageGridItem from '~/components/image-grid-item'
 
 import { addImage, removeImage, generateImage, generateDefaultImage } from '~/utils/image-action'
+import { getRandomInt } from '~/utils/util'
 
 interface ImageGridProps {
   id: string
@@ -13,6 +14,7 @@ interface ImageGridProps {
   // used to determine if the image grid contains a single image
   isSingle?: boolean
   activeImageId?: string
+  position: { x: number; y: number }
 
   addTempImage: (data: Record<string, TempImageGridData>, activeImage?: ActiveImageGen) => void
   removeTempImage: (id: string, grids: ImageGen[] | null, removeImageId: string) => void
@@ -26,6 +28,7 @@ const ImageGrid = ({
   grids,
   isSingle = false,
   activeImageId,
+  position: favoritePosition,
   addTempImage,
   removeTempImage,
   setFavorites,
@@ -37,13 +40,15 @@ const ImageGrid = ({
   const onImageClick = async (e: MouseEvent, action: Action, index: number) => {
     switch (action) {
       case 'ADD':
+        // the position of the image grid is to the top left of the current image position because image is 180 * 180
+        const addPosition = {
+          x: e.pageX - getRandomInt(180, 240),
+          y: e.pageY - getRandomInt(180, 240),
+        }
         const { gridId: imageGridId, data: addData } = addImage(grids[index])
         const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
 
-        addTempImage(
-          { [imageGridId]: { images: addData, position: { x: e.pageX, y: e.pageY } } },
-          activeImage,
-        )
+        addTempImage({ [imageGridId]: { images: addData, position: addPosition } }, activeImage)
         updatePromptText(grids[index].alt)
         break
 
@@ -55,6 +60,7 @@ const ImageGrid = ({
 
       case 'GENERATE':
         const image = grids[index]
+        // the image grid is 580px square, need to subtract 350px from the x and y position to center the image
         const position = { x: e.pageX - 350, y: e.pageY - 355 }
 
         // generate a default image array with a loading image
@@ -83,7 +89,7 @@ const ImageGrid = ({
         favoriteData[index].isFavorite = !favoriteData[index].isFavorite
 
         setFavorites(favoriteData[index])
-        addTempImage({ [id]: { images: favoriteData, position: { x: 0, y: 0 } } })
+        addTempImage({ [id]: { images: favoriteData, position: favoritePosition } })
         break
     }
   }

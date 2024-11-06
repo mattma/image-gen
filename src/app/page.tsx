@@ -174,7 +174,7 @@ export default function Home() {
         <div className="mt-4">
           <h1 className="text-3xl font-bold text-center">Live Image Generation</h1>
 
-          <div className="my-4 flex gap-2 justify-center">
+          <div className="relative my-4 flex gap-2 justify-center z-[100]">
             <input
               ref={queryRef}
               type="text"
@@ -207,6 +207,7 @@ export default function Home() {
                 id={group.id}
                 grids={group.data}
                 activeImageId={activeImage?.id}
+                position={group.position}
                 addTempImage={addTempImage}
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
@@ -219,7 +220,7 @@ export default function Home() {
           {tempGridSingle.map((single) => (
             <div
               key={single.id}
-              className="absolute top-0 left-0"
+              className="absolute"
               style={{
                 top: `${single.position.y}px`,
                 left: `${single.position.x}px`,
@@ -230,6 +231,7 @@ export default function Home() {
                 grids={single.data}
                 activeImageId={activeImage?.id}
                 isSingle={true}
+                position={single.position}
                 addTempImage={addTempImage}
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}

@@ -3,6 +3,7 @@ import { devtools } from 'zustand/middleware'
 import { v4 as uuid } from 'uuid'
 
 import { updateFavoriteList } from '~/utils/image-action'
+import { getRandomInt } from '~/utils/util'
 
 export type SetGridOptions = {
   replace?: boolean
@@ -148,6 +149,7 @@ export const useAppStore = create<AppProps>()(
         const { tempImageGrids, activeImage } = latest
 
         const groupId = activeImage?.groupId ?? uuid()
+        const position = { x: getRandomInt(180, 360), y: getRandomInt(180, 360) }
 
         const updatedActiveImage: ImageGen = {
           ...image,
@@ -158,7 +160,7 @@ export const useAppStore = create<AppProps>()(
         return {
           tempImageGrids: {
             ...tempImageGrids,
-            [groupId]: { images: [updatedActiveImage], position: { x: 0, y: 0 } },
+            [groupId]: { images: [updatedActiveImage], position },
           },
           activeImage: { ...updatedActiveImage, groupId },
         }

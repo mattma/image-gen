@@ -5,6 +5,7 @@ import type { ActiveImageGen, ImageGen, SetGridOptions, TempImageGridData } from
 import Img, { type Action } from '~/components/image'
 
 import { addImage, generateImage, generateDefaultImage } from '~/utils/image-action'
+import { getRandomInt } from '~/utils/util'
 
 type GalleryProps = {
   grids: ImageGen[]
@@ -25,12 +26,15 @@ const Gallery = ({
   const onImageClick = async (e: MouseEvent, action: Action, index: number) => {
     switch (action) {
       case 'ADD':
+        // the position of the image grid is to the top left of the current image position because image is 180 * 180
+        const addPosition = {
+          x: e.pageX - getRandomInt(180, 240),
+          y: e.pageY - getRandomInt(180, 240),
+        }
         const { gridId: imageGridId, data: addData } = addImage(grids[index])
         const activeImage: ActiveImageGen = { ...addData[0], groupId: imageGridId }
-        addTempImage(
-          { [imageGridId]: { images: addData, position: { x: e.pageX, y: e.pageY } } },
-          activeImage,
-        )
+
+        addTempImage({ [imageGridId]: { images: addData, position: addPosition } }, activeImage)
         updatePromptText(grids[index].alt)
         break
 
@@ -42,6 +46,7 @@ const Gallery = ({
         break
 
       case 'GENERATE':
+        // the image grid is 580px square, need to subtract 350px from the x and y position to center the image
         const position = { x: e.pageX - 350, y: e.pageY - 355 }
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(grids[index])
