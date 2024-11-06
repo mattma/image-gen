@@ -5,7 +5,7 @@ import type { ImageGen, ActiveImageGen } from '~/stores/app'
 import type { Action, ImageHoverState } from '~/components/image'
 import ImageGridItem from '~/components/image-grid-item'
 
-import { addImage, removeImage, generateImage } from '~/utils/image-action'
+import { addImage, removeImage, generateImage, generateDefaultImage } from '~/utils/image-action'
 
 interface ImageGridProps {
   id: string
@@ -50,7 +50,13 @@ const ImageGrid = ({
         break
 
       case 'GENERATE':
-        const { data: generateData, prompt } = await generateImage(grids[index])
+        const image = grids[index]
+
+        // generate a default image array with a loading image
+        const { data: defaultImages, gridId } = generateDefaultImage(image)
+        addTempImage({ [gridId]: defaultImages })
+
+        const { data: generateData, prompt } = await generateImage(image, gridId)
         addTempImage(generateData)
         updatePromptText(prompt)
 

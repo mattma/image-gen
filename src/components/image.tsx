@@ -54,7 +54,10 @@ const Img = ({
     },
     {
       icon: '!',
-      onClick: () => onClick('GENERATE'),
+      onClick: () => {
+        setIsDeleted(true)
+        onClick('GENERATE')
+      },
     },
   ]
 

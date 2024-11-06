@@ -51,12 +51,14 @@ async function generate(prompt: string): Promise<ImageGen[] | null> {
   return null
 }
 
-export async function generateImage(image: ImageGen): Promise<{
+export async function generateImage(
+  image: ImageGen,
+  gridId: string,
+): Promise<{
   data: Record<string, ImageGen[]>
   prompt: string
 }> {
   let ret = {}
-  const gridId = uuid()
   const newGrids = await generate(image.alt)
   let prompt = image.alt
 
@@ -71,6 +73,27 @@ export async function generateImage(image: ImageGen): Promise<{
   }
 
   return { data: ret, prompt }
+}
+
+// generate a default image array with a loading image
+export function generateDefaultImage(image: ImageGen): {
+  data: ImageGen[]
+  gridId: string
+} {
+  const gridId = uuid()
+  const defaultImages = Array.from({ length: 4 }, () => ({
+    id: uuid(),
+    src: '/loading.webp',
+    alt: 'Loading...',
+    isFavorite: false,
+  }))
+
+  defaultImages.splice(2, 0, image)
+
+  return {
+    data: defaultImages,
+    gridId,
+  }
 }
 
 // if the current favorite is already in the favorites list, remove it

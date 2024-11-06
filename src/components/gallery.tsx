@@ -2,7 +2,7 @@ import type { ImageGen, SetGridOptions } from '~/stores/app'
 
 import Img, { type Action } from '~/components/image'
 
-import { addImage, generateImage } from '~/utils/image-action'
+import { addImage, generateImage, generateDefaultImage } from '~/utils/image-action'
 
 type GalleryProps = {
   grids: ImageGen[]
@@ -36,8 +36,12 @@ const Gallery = ({
         break
 
       case 'GENERATE':
+        // generate a default image array with a loading image
+        const { data: defaultImages, gridId } = generateDefaultImage(grids[index])
+        addTempImage({ [gridId]: defaultImages })
+
         // generate a new UUID, and set current image as the center in new image grid
-        const { data: generateData, prompt } = await generateImage(grids[index])
+        const { data: generateData, prompt } = await generateImage(grids[index], gridId)
         addTempImage(generateData)
         updatePromptText(prompt)
 

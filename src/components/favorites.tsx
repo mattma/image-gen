@@ -2,7 +2,7 @@ import type { ImageGen } from '~/stores/app'
 
 import Heart from '~/components/heart'
 
-import { addImage, generateImage } from '~/utils/image-action'
+import { addImage, generateImage, generateDefaultImage } from '~/utils/image-action'
 
 interface FavoritesProps {
   favorites: ImageGen[]
@@ -25,7 +25,11 @@ const Favorites = ({ favorites, setFavorites, addTempImage, updatePromptText }: 
     {
       icon: '!',
       onClick: async (favorite: ImageGen) => {
-        const { data: generateData, prompt } = await generateImage(favorite)
+        // generate a default image array with a loading image
+        const { data: defaultImages, gridId } = generateDefaultImage(favorite)
+        addTempImage({ [gridId]: defaultImages })
+
+        const { data: generateData, prompt } = await generateImage(favorite, gridId)
         addTempImage(generateData)
         updatePromptText(prompt)
       },
