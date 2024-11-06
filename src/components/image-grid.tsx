@@ -28,7 +28,7 @@ const ImageGrid = ({
   grids,
   isSingle = false,
   activeImageId,
-  position: favoritePosition,
+  position: gridPosition,
   addTempImage,
   removeTempImage,
   setFavorites,
@@ -89,7 +89,7 @@ const ImageGrid = ({
         favoriteData[index].isFavorite = !favoriteData[index].isFavorite
 
         setFavorites(favoriteData[index])
-        addTempImage({ [id]: { images: favoriteData, position: favoritePosition } })
+        addTempImage({ [id]: { images: favoriteData, position: gridPosition } })
         break
     }
   }
@@ -105,6 +105,7 @@ const ImageGrid = ({
           groupId={id}
           hoverState={hoverState}
           activeImageId={activeImageId}
+          gridPosition={gridPosition}
           onImageClick={onImageClick}
           setHoverState={setHoverState}
           setActiveImage={setActiveImage}

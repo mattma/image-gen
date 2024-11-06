@@ -218,27 +218,19 @@ export default function Home() {
           ))}
 
           {tempGridSingle.map((single) => (
-            <div
+            <ImageGrid
               key={single.id}
-              className="absolute"
-              style={{
-                top: `${single.position.y}px`,
-                left: `${single.position.x}px`,
-              }}
-            >
-              <ImageGrid
-                id={single.id}
-                grids={single.data}
-                activeImageId={activeImage?.id}
-                isSingle={true}
-                position={single.position}
-                addTempImage={addTempImage}
-                removeTempImage={removeTempImage}
-                setFavorites={setFavorites}
-                setActiveImage={handleSetActiveImage}
-                updatePromptText={updatePromptText}
-              />
-            </div>
+              id={single.id}
+              grids={single.data}
+              activeImageId={activeImage?.id}
+              isSingle={true}
+              position={single.position}
+              addTempImage={addTempImage}
+              removeTempImage={removeTempImage}
+              setFavorites={setFavorites}
+              setActiveImage={handleSetActiveImage}
+              updatePromptText={updatePromptText}
+            />
           ))}
         </div>
 
