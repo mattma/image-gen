@@ -58,6 +58,7 @@ const Img = ({
     },
   ]
 
+  // important. Detect mouse hover on the image. so we can manage the z-index of the image, so the image is on top of the other images when hovered
   const handleMouseAction = (hover: boolean) => {
     if (setHoverState && index !== undefined) {
       setHoverState({ hover, index })

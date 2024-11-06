@@ -32,8 +32,6 @@ async function generate(prompt: string): Promise<ImageGen[] | null> {
   const prompts = await fetchChatCompletion(prompt)
 
   if (prompts && prompts.length > 0) {
-    console.log('prompts', prompts)
-
     const images = await Promise.all(
       prompts.map(async (alt: string) => {
         const result = await fetchImage(alt)
@@ -46,8 +44,6 @@ async function generate(prompt: string): Promise<ImageGen[] | null> {
         }
       }),
     )
-
-    console.log('images', images)
 
     return images
   }

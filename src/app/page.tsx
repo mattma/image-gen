@@ -6,9 +6,9 @@ import { useShallow } from 'zustand/shallow'
 import { useAppStore, type ActiveImageGen, type ImageGen } from '~/stores/app'
 
 import Favorites from '~/components/favorites'
-import SidebarToggle from '~/components/sidebar-toggle'
-import ImageGrid from '~/components/image-grid'
 import Gallery from '~/components/gallery'
+import ImageGrid from '~/components/image-grid'
+import SidebarToggle from '~/components/sidebar-toggle'
 
 import { fetchImage } from '~/services/api'
 
@@ -39,16 +39,19 @@ export default function Home() {
     ]),
   )
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+
+  // Initialize page load to retrieve favorite images from local storage
+  useEffect(() => {
+    const favorites = JSON.parse(window.localStorage.getItem('favorites') ?? '[]')
+
+    setFavorites(favorites)
+  }, [setFavorites])
+
+  // query input box
   const queryRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-
-  const tempImageGridsKeys = Object.keys(tempImageGrids)
-
-  const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ActiveImageGen[] }[]>([])
-  const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ActiveImageGen[] }[]>([])
 
   useEffect(() => {
     if (debouncedQuery.length > 0) {
@@ -69,15 +72,19 @@ export default function Home() {
   }, [debouncedQuery, setCurrentImageGen])
 
   useEffect(() => {
-    // debounce query by 800 ms
-    const timeoutId = setTimeout(() => setDebouncedQuery(query), 800)
+    // debounce query by 600 ms. change the value to see the difference
+    const timeoutId = setTimeout(() => setDebouncedQuery(query), 600)
     return () => clearTimeout(timeoutId)
   }, [query])
 
+  // image playground section. used to display the images that are generated or added by the user, before they are added to the gallery section. User can darg the image around or update image src via LLM
+  const [tempGridSingle, setTempGridSingle] = useState<{ id: string; data: ImageGen[] }[]>([])
+  const [tempGridFive, setTempGridFive] = useState<{ id: string; data: ImageGen[] }[]>([])
+
   useEffect(() => {
     const keys = Object.keys(tempImageGrids)
-    const singleGroup: { id: string; data: ActiveImageGen[] }[] = []
-    const fiveGroup: { id: string; data: ActiveImageGen[] }[] = []
+    const singleGroup: { id: string; data: ImageGen[] }[] = []
+    const fiveGroup: { id: string; data: ImageGen[] }[] = []
 
     if (keys.length > 0) {
       keys.forEach((key) => {
@@ -95,17 +102,11 @@ export default function Home() {
     setTempGridFive(fiveGroup)
   }, [tempImageGrids])
 
-  // Initialize page load with favorites from local storage
-  useEffect(() => {
-    const favorites = JSON.parse(window.localStorage.getItem('favorites') ?? '[]')
-
-    setFavorites(favorites)
-  }, [setFavorites])
-
+  // handle the arrange button. this will move the images from the temp image grids to the gallery section
   const handleArrange = () => {
     const tempGirds: ActiveImageGen[] = []
 
-    tempImageGridsKeys.forEach((key) => {
+    Object.keys(tempImageGrids).forEach((key) => {
       if (tempImageGrids[key].length > 0) {
         for (const image of tempImageGrids[key]) {
           // Add to the beginning of the array if image is not empty
@@ -119,12 +120,14 @@ export default function Home() {
     setGrids(tempGirds, { emptyTempImageGrids: true })
   }
 
+  // update the query input box with the active image prompt text, or the most recently generated image (last item in the 4 generated images) prompt text
   const updatePromptText = (prompt: string) => {
     if (queryRef.current) {
       queryRef.current.value = prompt
     }
   }
 
+  // select or deselect the active image by Double Clicking on the image
   const handleSetActiveImage = (image: ActiveImageGen | null) => {
     setActiveImage(image)
 
@@ -154,7 +157,7 @@ export default function Home() {
 
       <section className="relative flex-1 space-y-8 px-8 overflow-y-auto">
         <div
-          className={`fixed top-4 hover:opacity-75 hover:cursor-pointer transition-left duration-300 ${isSidebarOpen ? 'left-36' : 'left-2'}`}
+          className={`fixed top-4 hover:opacity-75 hover:cursor-pointer transition-left duration-300 ${isSidebarOpen ? 'left-36' : 'left-4'}`}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
         >
           <SidebarToggle />
@@ -168,6 +171,7 @@ export default function Home() {
               ref={queryRef}
               type="text"
               value={query}
+              placeholder="Enter your prompt here..."
               onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
               className="block w-96 px-4 py-2 rounded-md border border-gray-500"
             />
@@ -217,15 +221,13 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="">
-          <Gallery
-            grids={girds}
-            addTempImage={addTempImage}
-            setGrids={setGrids}
-            setFavorites={setFavorites}
-            updatePromptText={updatePromptText}
-          />
-        </div>
+        <Gallery
+          grids={girds}
+          addTempImage={addTempImage}
+          setGrids={setGrids}
+          setFavorites={setFavorites}
+          updatePromptText={updatePromptText}
+        />
       </section>
     </div>
   )

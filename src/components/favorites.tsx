@@ -12,12 +12,7 @@ interface FavoritesProps {
   updatePromptText: (prompt: string) => void
 }
 
-export default function Favorites({
-  favorites,
-  setFavorites,
-  addTempImage,
-  updatePromptText,
-}: FavoritesProps) {
+const Favorites = ({ favorites, setFavorites, addTempImage, updatePromptText }: FavoritesProps) => {
   const actions = [
     {
       icon: '+',
@@ -26,7 +21,6 @@ export default function Favorites({
         addTempImage(addData)
         updatePromptText(favorite.alt)
       },
-      className: '',
     },
     {
       icon: '!',
@@ -85,3 +79,5 @@ export default function Favorites({
     </div>
   )
 }
+
+export default Favorites

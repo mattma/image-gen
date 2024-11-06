@@ -20,41 +20,6 @@ export interface ActiveImageGen extends ImageGen {
   groupId?: string
 }
 
-const temp = (): ImageGen[] => {
-  return [
-    {
-      id: uuid(),
-      src: 'https://fal.media/files/panda/-iQ0LwOBGnxckTYmK3BnN.png',
-      alt: 'art deco poster advertising moon travel',
-      isFavorite: false,
-    },
-    {
-      id: uuid(),
-      src: 'https://placehold.co/180',
-      alt: '2 Lorem ipsum dolor sit amet',
-      isFavorite: false,
-    },
-    {
-      id: uuid(),
-      src: 'https://placehold.co/180',
-      alt: '3 center image',
-      isFavorite: false,
-    },
-    {
-      id: uuid(),
-      src: 'https://placehold.co/180',
-      alt: '4 Lorem ipsum dolor sit amet',
-      isFavorite: false,
-    },
-    {
-      id: uuid(),
-      src: 'https://placehold.co/180',
-      alt: '5 Last image',
-      isFavorite: false,
-    },
-  ]
-}
-
 export interface AppProps {
   grids: ImageGen[]
   tempImageGrids: Record<string, ImageGen[]>
@@ -72,7 +37,7 @@ export interface AppProps {
 // Redux Devtools enabled for debugging
 export const useAppStore = create<AppProps>()(
   devtools((set, get) => ({
-    grids: temp(),
+    grids: [],
     tempImageGrids: {},
     favorites: [],
     activeImage: null,
@@ -115,7 +80,7 @@ export const useAppStore = create<AppProps>()(
         return { tempImageGrids, activeImage }
       }),
 
-    // scan is used to scan the favorite image in `tempImageGrids` and `grids`, used in `Favorites` component
+    // scan is used to scan the favorite image in `tempImageGrids` and `grids`, used in `Favorites` component. Enables two way binding between `grids`,`tempImageGrids` and `favorites`
     setFavorites: (favorite: ImageGen | ImageGen[], scan = false) =>
       set(() => {
         const latest = get()
