@@ -1,3 +1,5 @@
+import { type MouseEvent } from 'react'
+
 import type { ImageGen, SetGridOptions } from '~/stores/app'
 
 import Img, { type Action } from '~/components/image'
@@ -20,7 +22,7 @@ const Gallery = ({
   setFavorites,
   updatePromptText,
 }: GalleryProps) => {
-  const onImageClick = async (action: Action, index: number) => {
+  const onImageClick = async (e: MouseEvent, action: Action, index: number) => {
     switch (action) {
       case 'ADD':
         const addData = addImage(grids[index])
@@ -67,7 +69,10 @@ const Gallery = ({
         <div className="relative flex flex-wrap gap-4">
           {grids.map((grid, index) => (
             <div key={grid.id} className="z-0 hover:z-50">
-              <Img {...grid} onClick={(action: Action) => onImageClick(action, index)} />
+              <Img
+                {...grid}
+                onClick={(e: MouseEvent, action: Action) => onImageClick(e, action, index)}
+              />
             </div>
           ))}
         </div>

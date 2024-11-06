@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, type MouseEvent } from 'react'
 import Draggable, { type DraggableData, type DraggableEvent } from 'react-draggable'
 
 import type { ImageGen } from '~/stores/app'
@@ -16,7 +16,7 @@ interface ImageProps extends ImageGen {
   index?: number
   activeImageId?: string
 
-  onClick: (action: Action) => void
+  onClick: (e: MouseEvent, action: Action) => void
   setHoverState?: (drag: ImageHoverState) => void
   handleStopPosition?: (position: { x: number; y: number }) => void
 }
@@ -42,21 +42,21 @@ const Img = ({
   const actions = [
     {
       icon: '+',
-      onClick: () => onClick('ADD'),
+      onClick: (e: MouseEvent) => onClick(e, 'ADD'),
       className: 'leading-none pt-[2.5px]',
     },
     {
       icon: '-',
-      onClick: () => {
+      onClick: (e: MouseEvent) => {
         setIsDeleted(true)
-        onClick('REMOVE')
+        onClick(e, 'REMOVE')
       },
     },
     {
       icon: '!',
-      onClick: () => {
+      onClick: (e: MouseEvent) => {
         setIsDeleted(true)
-        onClick('GENERATE')
+        onClick(e, 'GENERATE')
       },
     },
   ]
@@ -100,7 +100,7 @@ const Img = ({
 
         <Heart
           isFavorite={isFavorite}
-          setFavorite={() => onClick('FAVORITE')}
+          setFavorite={(e: MouseEvent) => onClick(e, 'FAVORITE')}
           className={`${src.endsWith('/loading.webp') ? 'hidden' : ''}`}
         />
 

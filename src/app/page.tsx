@@ -156,7 +156,7 @@ export default function Home() {
         </div>
       </aside>
 
-      <section className="relative flex-1 space-y-8 px-8 overflow-y-auto">
+      <section className="flex-1 space-y-8 px-8 overflow-y-auto">
         <div
           className={`fixed top-4 hover:opacity-75 hover:cursor-pointer transition-left duration-300 ${isSidebarOpen ? 'left-36' : 'left-4'}`}
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -186,9 +186,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="relative h-[60%]">
+        <div className="h-[60%]">
           {tempGridFive.map((group, level) => (
-            <div key={group.id} className="w-[600px] grid grid-rows-3 grid-cols-3 gap-4">
+            <div
+              key={group.id}
+              className="absolute w-[580px] grid grid-rows-3 grid-cols-3 gap-4"
+              style={{
+                top: `${1134 - 355}px`,
+                left: `${1160 - 350}px`,
+              }}
+            >
               <ImageGrid
                 id={group.id}
                 level={level}

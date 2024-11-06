@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type MouseEvent } from 'react'
 
 import type { ImageGen, ActiveImageGen } from '~/stores/app'
 
@@ -35,7 +35,7 @@ const ImageGrid = ({
 }: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
-  const onImageClick = async (action: Action, index: number) => {
+  const onImageClick = async (e: MouseEvent, action: Action, index: number) => {
     switch (action) {
       case 'ADD':
         const addData = addImage(grids[index])

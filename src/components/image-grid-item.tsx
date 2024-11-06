@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type MouseEvent } from 'react'
 
 import type { ImageGen, ActiveImageGen } from '~/stores/app'
 
@@ -12,7 +12,7 @@ interface ImageGridItemProps {
   hoverState: { hover: boolean; index: number }
   activeImageId?: string
   groupId?: string
-  onImageClick: (action: Action, index: number) => void
+  onImageClick: (e: MouseEvent, action: Action, index: number) => void
   setHoverState: (hoverState: ImageHoverState) => void
   setActiveImage: (image: ActiveImageGen | null) => void
 }
@@ -35,9 +35,9 @@ const ImageGridItem = ({
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
 
-  useEffect(() => setTop(() => position.y * 2), [position.y])
+  useEffect(() => setTop((prev) => position.y + prev), [position.y])
 
-  useEffect(() => setLeft(() => position.x * 2), [position.x])
+  useEffect(() => setLeft((prev) => position.x + prev), [position.x])
 
   return (
     <div
@@ -60,7 +60,7 @@ const ImageGridItem = ({
           {...image}
           index={index}
           activeImageId={activeImageId}
-          onClick={(action: Action) => onImageClick(action, index)}
+          onClick={(e: MouseEvent, action: Action) => onImageClick(e, action, index)}
           setHoverState={setHoverState}
           handleStopPosition={setPosition}
         />

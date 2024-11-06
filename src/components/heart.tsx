@@ -1,8 +1,10 @@
+import type { MouseEvent } from 'react'
+
 type HeartProps = {
   isFavorite: boolean
   className?: string
 
-  setFavorite: () => void
+  setFavorite: (e: MouseEvent) => void
 }
 
 const Heart = ({
