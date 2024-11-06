@@ -18,6 +18,7 @@ interface ImageGridProps {
   removeTempImage: (id: string, grids: ImageGen[] | null) => void
   setFavorites: (favorite: ImageGen) => void
   setActiveImage: (image: ActiveImageGen | null) => void
+  updatePromptText: (text: string) => void
 }
 
 const ImageGrid = ({
@@ -30,15 +31,16 @@ const ImageGrid = ({
   removeTempImage,
   setFavorites,
   setActiveImage,
+  updatePromptText,
 }: ImageGridProps) => {
   const [hoverState, setHoverState] = useState<ImageHoverState>({ hover: false, index: -1 })
 
   const onImageClick = async (action: Action, index: number) => {
-    console.log('action', action, id, index, grids)
     switch (action) {
       case 'ADD':
         const addData = addImage(grids[index])
         addTempImage(addData)
+        updatePromptText(grids[index].alt)
         break
 
       case 'REMOVE':
@@ -49,6 +51,8 @@ const ImageGrid = ({
       case 'GENERATE':
         const generateData = await generateImage(grids[index])
         addTempImage(generateData)
+
+        updatePromptText(grids[index].alt)
 
         // remove the current image because we are generating a new grid with the current image as the center
         const removeCurrentData = removeImage(index, grids)

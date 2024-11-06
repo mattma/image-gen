@@ -9,15 +9,22 @@ interface FavoritesProps {
 
   setFavorites: (favorite: ImageGen, scan?: boolean) => void
   addTempImage: (data: Record<string, ImageGen[]>) => void
+  updatePromptText: (prompt: string) => void
 }
 
-export default function Favorites({ favorites, setFavorites, addTempImage }: FavoritesProps) {
+export default function Favorites({
+  favorites,
+  setFavorites,
+  addTempImage,
+  updatePromptText,
+}: FavoritesProps) {
   const actions = [
     {
       icon: '+',
       onClick: (favorite: ImageGen) => {
         const addData = addImage(favorite)
         addTempImage(addData)
+        updatePromptText(favorite.alt)
       },
       className: '',
     },
@@ -26,6 +33,7 @@ export default function Favorites({ favorites, setFavorites, addTempImage }: Fav
       onClick: async (favorite: ImageGen) => {
         const generateData = await generateImage(favorite)
         addTempImage(generateData)
+        updatePromptText(favorite.alt)
       },
       className: 'pt-[1.5px]',
     },

@@ -10,14 +10,22 @@ type GalleryProps = {
   addTempImage: (data: Record<string, ImageGen[]>, id?: string) => void
   setGrids: (grids: ImageGen[], options?: SetGridOptions) => void
   setFavorites: (favorite: ImageGen) => void
+  updatePromptText: (text: string) => void
 }
 
-const Gallery = ({ grids, addTempImage, setGrids, setFavorites }: GalleryProps) => {
+const Gallery = ({
+  grids,
+  addTempImage,
+  setGrids,
+  setFavorites,
+  updatePromptText,
+}: GalleryProps) => {
   const onImageClick = async (action: Action, index: number) => {
     switch (action) {
       case 'ADD':
         const addData = addImage(grids[index])
         addTempImage(addData)
+        updatePromptText(grids[index].alt)
         break
 
       case 'REMOVE':
@@ -31,6 +39,7 @@ const Gallery = ({ grids, addTempImage, setGrids, setFavorites }: GalleryProps) 
         // generate a new UUID, and set current image as the center in new image grid
         const generateData = await generateImage(grids[index])
         addTempImage(generateData)
+        updatePromptText(grids[index].alt)
 
         // remove the current image from the grid
         const updatedGrids = [...grids]

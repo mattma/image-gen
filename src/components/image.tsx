@@ -37,6 +37,8 @@ const Img = ({
   // Track the position in state
   const [position, setPosition] = useState({ x: 0, y: 0 })
 
+  const [isDeleted, setIsDeleted] = useState(false)
+
   const actions = [
     {
       icon: '+',
@@ -45,7 +47,10 @@ const Img = ({
     },
     {
       icon: '-',
-      onClick: () => onClick('REMOVE'),
+      onClick: () => {
+        setIsDeleted(true)
+        onClick('REMOVE')
+      },
     },
     {
       icon: '!',
@@ -74,7 +79,7 @@ const Img = ({
     <Draggable nodeRef={nodeRef} position={position} onStop={handleStop}>
       <div
         ref={nodeRef}
-        className="relative group w-[180px] h-[180px] hover:cursor-grab"
+        className={`relative group w-[180px] h-[180px] hover:cursor-grab ${isDeleted ? 'hidden' : ''}`}
         onMouseEnter={() => handleMouseAction(true)}
         onMouseLeave={() => handleMouseAction(false)}
       >

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, type ChangeEvent } from 'react'
+import { useState, useEffect, useRef, type ChangeEvent } from 'react'
 import { useShallow } from 'zustand/shallow'
 
 import { useAppStore, type ActiveImageGen, type ImageGen } from '~/stores/app'
@@ -39,6 +39,7 @@ export default function Home() {
     ]),
   )
 
+  const queryRef = useRef<HTMLInputElement>(null)
   const [query, setQuery] = useState('')
   const [debouncedQuery, setDebouncedQuery] = useState('')
 
@@ -118,6 +119,12 @@ export default function Home() {
     setGrids(tempGirds, { emptyTempImageGrids: true })
   }
 
+  const updatePromptText = (prompt: string) => {
+    if (queryRef.current) {
+      queryRef.current.value = prompt
+    }
+  }
+
   return (
     <div className="flex w-full h-full">
       <aside
@@ -131,6 +138,7 @@ export default function Home() {
             favorites={favorites}
             setFavorites={setFavorites}
             addTempImage={addTempImage}
+            updatePromptText={updatePromptText}
           />
         </div>
       </aside>
@@ -148,6 +156,7 @@ export default function Home() {
 
           <div className="my-4 flex gap-2 justify-center">
             <input
+              ref={queryRef}
               type="text"
               value={query}
               onChange={(e: ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
@@ -176,6 +185,7 @@ export default function Home() {
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
                 setActiveImage={setActiveImage}
+                updatePromptText={updatePromptText}
               />
             </div>
           ))}
@@ -193,6 +203,7 @@ export default function Home() {
                 removeTempImage={removeTempImage}
                 setFavorites={setFavorites}
                 setActiveImage={setActiveImage}
+                updatePromptText={updatePromptText}
               />
             ))}
           </div>
@@ -204,6 +215,7 @@ export default function Home() {
             addTempImage={addTempImage}
             setGrids={setGrids}
             setFavorites={setFavorites}
+            updatePromptText={updatePromptText}
           />
         </div>
       </section>
