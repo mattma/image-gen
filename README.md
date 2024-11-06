@@ -44,7 +44,7 @@ User can **double click** on the image to **select** or **deselect** to set as t
   - [Version 19 RC](https://react.dev/blog/2024/04/25/react-19) released on 10/28/2024
   - [React Compiler Beta](https://react.dev/blog/2024/10/21/react-compiler-beta-release) released on 10/25/2024
   - *Note: I did not use `useCallback`, `useMemo`, `memo` in this project because the React Compiler Beta takes care of the memoization*
-- [Zustand](https://zustand.dev)
+- [Zustand](https://github.com/pmndrs/zustand)
   - Redux-like state management.
   - I also setup the devtools for Zustand, so it works with [the React Devtools chrome extension](https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en). Open the React Devtools in Chrome and go to the "Redux" tab to see the Zustand store in local development
 - [react-draggable](https://github.com/react-grid-layout/react-draggable)
@@ -68,6 +68,16 @@ User can **double click** on the image to **select** or **deselect** to set as t
   - ✔ Formatted all files
 - `npm run typecheck` to check for type errors.
   - ✔ No TypeScript errors found
+
+## Weird behaviors (can definitely be fixed)
+
+- User click on an image's **"Generate"** button, here is what will happen:
+
+  - The original clicked image will be removed immediately from where the mouse cursor is (you may find it weird)
+  - A new image grid contains 5 images will be created and displayed at the top left corner of the image playground section.
+  - The original clicked image is moved to the center image in the new image grid.
+  - The other 4 images will show the loading animation, once the images are generated and downloaded, they will replace the loading animation with the newly generated images.
+
 
 ## Improvement Opportunities
 
