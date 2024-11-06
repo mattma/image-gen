@@ -29,16 +29,15 @@ const ImageGridItem = ({
   setHoverState,
   setActiveImage,
 }: ImageGridItemProps) => {
-  const [position, setPosition] = useState({
-    x: 10 * level,
-    y: (isSingle ? -80 : -280) * level,
-  })
+  const x = 30 * level
+  const y = (isSingle ? -60 : -270) * level
+  const [position, setPosition] = useState({ x, y })
   const [top, setTop] = useState(0)
   const [left, setLeft] = useState(0)
 
-  useEffect(() => setTop((prev) => prev + position.y), [position.y])
+  useEffect(() => setTop(() => position.y * 2), [position.y])
 
-  useEffect(() => setLeft((prev) => prev + position.x), [position.x])
+  useEffect(() => setLeft(() => position.x * 2), [position.x])
 
   return (
     <div
