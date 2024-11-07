@@ -147,9 +147,11 @@ export const useAppStore = create<AppProps>()(
       set(() => {
         const latest = get()
         const { tempImageGrids, activeImage } = latest
-
         const groupId = activeImage?.groupId ?? uuid()
-        const position = { x: getRandomInt(180, 360), y: getRandomInt(180, 360) }
+
+        const position = tempImageGrids[groupId]
+          ? tempImageGrids[groupId].position
+          : { x: getRandomInt(180, 360), y: getRandomInt(180, 360) }
 
         const updatedActiveImage: ImageGen = {
           ...image,
@@ -157,10 +159,19 @@ export const useAppStore = create<AppProps>()(
           isFavorite: activeImage?.isFavorite ?? false,
         }
 
+        let images = tempImageGrids[groupId] && tempImageGrids[groupId].images
+
+        // if the image already exists, update it, otherwise add it
+        if (images) {
+          images = images.map((i) => (i.id === updatedActiveImage.id ? updatedActiveImage : i))
+        } else {
+          images = [updatedActiveImage]
+        }
+
         return {
           tempImageGrids: {
             ...tempImageGrids,
-            [groupId]: { images: [updatedActiveImage], position },
+            [groupId]: { images, position },
           },
           activeImage: { ...updatedActiveImage, groupId },
         }
