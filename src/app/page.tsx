@@ -12,12 +12,6 @@ import SidebarToggle from '~/components/sidebar-toggle'
 
 import { fetchImage } from '~/services/api'
 
-type TempGridData = {
-  id: string
-  data: ImageGen[]
-  position: { x: number; y: number }
-}
-
 export default function Home() {
   const [
     girds,
@@ -82,32 +76,6 @@ export default function Home() {
     const timeoutId = setTimeout(() => setDebouncedQuery(query), 600)
     return () => clearTimeout(timeoutId)
   }, [query])
-
-  // image playground section. used to display the images that are generated or added by the user, before they are added to the gallery section. User can darg the image around or update image src via LLM
-  const [tempGridSingle, setTempGridSingle] = useState<TempGridData[]>([])
-  const [tempGridFive, setTempGridFive] = useState<TempGridData[]>([])
-
-  useEffect(() => {
-    const keys = Object.keys(tempImageGrids)
-    const singleGroup: TempGridData[] = []
-    const fiveGroup: TempGridData[] = []
-
-    if (keys.length > 0) {
-      keys.forEach((key) => {
-        const { images, position } = tempImageGrids[key]
-        const gridSize = images.length
-
-        if (gridSize === 1) {
-          singleGroup.push({ id: key, data: images, position })
-        } else if (gridSize === 5) {
-          fiveGroup.push({ id: key, data: images, position })
-        }
-      })
-    }
-
-    setTempGridSingle(singleGroup)
-    setTempGridFive(fiveGroup)
-  }, [tempImageGrids])
 
   // handle the arrange button. this will move the images from the temp image grids to the gallery section
   const handleArrange = () => {
@@ -194,28 +162,13 @@ export default function Home() {
         </div>
 
         <div className="h-[60%]">
-          {tempGridFive.map((group) => (
+          {Object.keys(tempImageGrids).map((key) => (
             <ImageGrid
-              key={group.id}
-              id={group.id}
-              grids={group.data}
+              key={key}
+              id={key}
+              grids={tempImageGrids[key].images}
               activeImageId={activeImage?.id}
-              position={group.position}
-              addTempImage={addTempImage}
-              removeTempImage={removeTempImage}
-              setFavorites={setFavorites}
-              setActiveImage={handleSetActiveImage}
-              updatePromptText={updatePromptText}
-            />
-          ))}
-
-          {tempGridSingle.map((single) => (
-            <ImageGrid
-              key={single.id}
-              id={single.id}
-              grids={single.data}
-              activeImageId={activeImage?.id}
-              position={single.position}
+              position={tempImageGrids[key].position}
               addTempImage={addTempImage}
               removeTempImage={removeTempImage}
               setFavorites={setFavorites}
