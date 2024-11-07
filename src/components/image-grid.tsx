@@ -57,7 +57,8 @@ const ImageGrid = ({
 
       case 'GENERATE':
         const image = grids[index]
-        const position = { x: e.pageX, y: e.pageY }
+        // to be centered in the image grid, mouse cursor position is at the "Generate" button, so subtract 152px from the x and 162px from the y position to negative value of the generate button position
+        const position = { x: e.pageX - 152, y: e.pageY - 162 }
 
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(image)
@@ -98,9 +99,10 @@ const ImageGrid = ({
           image={image}
           index={index}
           groupId={id}
-          hoverState={hoverState}
+          isSingle={grids.length === 1}
           activeImageId={activeImageId}
           gridPosition={gridPosition}
+          hoverState={hoverState}
           onImageClick={onImageClick}
           setHoverState={setHoverState}
           setActiveImage={setActiveImage}

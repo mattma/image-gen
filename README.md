@@ -76,6 +76,6 @@ In addition, whenever user clicks on `"+"` button to add an new image, the new i
 
 ## Improvement Opportunities
 
-- Image playground (drag image) section is implemented with HTML and CSS 3. It can be implement using Canvas API using [Three.js](https://threejs.org/) and [React Three Fiber](https://r3f.docs.pmnd.rs/getting-started/introduction)
-- Aria labels in HTML elements for better keyboard navigation
 - A real backend server can be implemented, example: **Express** in Node.js, **FastAPI** in Python, **Gin** in Golang, etc. Currently, the API request send the Fal API key via the client side JavaScript code, so it is exposed to the browser console. We should not expose the API key in the client side JavaScript code, and the API key should be stored in the backend server.
+- Image playground (drag image) section is implemented with HTML and CSS, each image is wrapped in a `div` element, it can be freely moved, selected and interacted with using the HTML element API. It can also be implement with Canvas API using [Three.js](https://threejs.org/) and [React Three Fiber](https://r3f.docs.pmnd.rs/getting-started/introduction).
+- Aria labels in HTML elements for better keyboard navigation

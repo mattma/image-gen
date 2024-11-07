@@ -9,10 +9,11 @@ import { getTopPosition, getLeftPosition } from '~/utils/util'
 interface ImageGridItemProps {
   image: ImageGen
   index: number
-  hoverState: { hover: boolean; index: number }
-  activeImageId?: string
   groupId?: string
+  isSingle: boolean
+  activeImageId?: string
   gridPosition: { x: number; y: number }
+  hoverState: { hover: boolean; index: number }
   onImageClick: (e: MouseEvent, action: Action, index: number) => void
   setHoverState: (hoverState: ImageHoverState) => void
   setActiveImage: (image: ActiveImageGen | null) => void
@@ -21,10 +22,11 @@ interface ImageGridItemProps {
 const ImageGridItem = ({
   image,
   index,
-  hoverState,
-  activeImageId,
   groupId,
+  isSingle,
+  activeImageId,
   gridPosition,
+  hoverState,
   onImageClick,
   setHoverState,
   setActiveImage,
@@ -37,15 +39,23 @@ const ImageGridItem = ({
 
   useEffect(() => {
     setTop((prev) => {
-      return imageHasMoved.current ? prev + position.y : getTopPosition(gridPosition.y, index)
+      return imageHasMoved.current
+        ? prev + position.y
+        : isSingle
+          ? gridPosition.y
+          : getTopPosition(gridPosition.y, index)
     })
-  }, [gridPosition.y, position.y, index])
+  }, [gridPosition.y, position.y, index, isSingle])
 
   useEffect(() => {
     setLeft((prev) => {
-      return imageHasMoved.current ? prev + position.x : getLeftPosition(gridPosition.x, index)
+      return imageHasMoved.current
+        ? prev + position.x
+        : isSingle
+          ? gridPosition.x
+          : getLeftPosition(gridPosition.x, index)
     })
-  }, [gridPosition.x, position.x, index])
+  }, [gridPosition.x, position.x, index, isSingle])
 
   const handleStopPosition = (position: { x: number; y: number }) => {
     setPosition(position)

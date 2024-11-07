@@ -35,7 +35,7 @@ const Favorites = ({ favorites, setFavorites, addTempImage, updatePromptText }: 
     {
       icon: '!',
       onClick: async (favorite: ImageGen) => {
-        const position = { x: getRandomInt(180, 360), y: getRandomInt(180, 360) }
+        const position = { x: getRandomInt(360, 480), y: getRandomInt(360, 480) }
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(favorite)
         addTempImage({ [gridId]: { images: defaultImages, position } })

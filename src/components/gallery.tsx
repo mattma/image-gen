@@ -46,8 +46,8 @@ const Gallery = ({
         break
 
       case 'GENERATE':
-        // the image grid is 580px square, need to subtract 350px from the x and y position to center the image
-        const position = { x: e.pageX - 350, y: e.pageY - 355 }
+        // to be centered in the image grid, mouse cursor position is at the "Generate" button, so subtract 152px from the x and 162px from the y position to negative value of the generate button position
+        const position = { x: e.pageX - 152, y: e.pageY - 162 }
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(grids[index])
         addTempImage({ [gridId]: { images: defaultImages, position } })
