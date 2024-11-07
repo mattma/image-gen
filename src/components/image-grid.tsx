@@ -11,8 +11,6 @@ import { getRandomInt } from '~/utils/util'
 interface ImageGridProps {
   id: string
   grids: ImageGen[]
-  // used to determine if the image grid contains a single image
-  isSingle?: boolean
   activeImageId?: string
   position: { x: number; y: number }
 
@@ -26,7 +24,6 @@ interface ImageGridProps {
 const ImageGrid = ({
   id,
   grids,
-  isSingle = false,
   activeImageId,
   position: gridPosition,
   addTempImage,
@@ -60,8 +57,7 @@ const ImageGrid = ({
 
       case 'GENERATE':
         const image = grids[index]
-        // the image grid is 580px square, need to subtract 350px from the x and y position to center the image
-        const position = { x: e.pageX - 350, y: e.pageY - 355 }
+        const position = { x: e.pageX, y: e.pageY }
 
         // generate a default image array with a loading image
         const { data: defaultImages, gridId } = generateDefaultImage(image)
@@ -101,7 +97,6 @@ const ImageGrid = ({
           key={image.id}
           image={image}
           index={index}
-          isSingle={isSingle}
           groupId={id}
           hoverState={hoverState}
           activeImageId={activeImageId}

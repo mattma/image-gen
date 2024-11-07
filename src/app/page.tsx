@@ -195,26 +195,18 @@ export default function Home() {
 
         <div className="h-[60%]">
           {tempGridFive.map((group) => (
-            <div
+            <ImageGrid
               key={group.id}
-              className="absolute w-[580px] grid grid-rows-3 grid-cols-3 gap-4"
-              style={{
-                top: `${group.position.y}px`,
-                left: `${group.position.x}px`,
-              }}
-            >
-              <ImageGrid
-                id={group.id}
-                grids={group.data}
-                activeImageId={activeImage?.id}
-                position={group.position}
-                addTempImage={addTempImage}
-                removeTempImage={removeTempImage}
-                setFavorites={setFavorites}
-                setActiveImage={handleSetActiveImage}
-                updatePromptText={updatePromptText}
-              />
-            </div>
+              id={group.id}
+              grids={group.data}
+              activeImageId={activeImage?.id}
+              position={group.position}
+              addTempImage={addTempImage}
+              removeTempImage={removeTempImage}
+              setFavorites={setFavorites}
+              setActiveImage={handleSetActiveImage}
+              updatePromptText={updatePromptText}
+            />
           ))}
 
           {tempGridSingle.map((single) => (
@@ -223,7 +215,6 @@ export default function Home() {
               id={single.id}
               grids={single.data}
               activeImageId={activeImage?.id}
-              isSingle={true}
               position={single.position}
               addTempImage={addTempImage}
               removeTempImage={removeTempImage}

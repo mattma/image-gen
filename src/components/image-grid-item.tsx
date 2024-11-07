@@ -4,10 +4,11 @@ import type { ImageGen, ActiveImageGen } from '~/stores/app'
 
 import Img, { type Action, type ImageHoverState } from '~/components/image'
 
+import { getTopPosition, getLeftPosition } from '~/utils/util'
+
 interface ImageGridItemProps {
   image: ImageGen
   index: number
-  isSingle: boolean
   hoverState: { hover: boolean; index: number }
   activeImageId?: string
   groupId?: string
@@ -20,7 +21,6 @@ interface ImageGridItemProps {
 const ImageGridItem = ({
   image,
   index,
-  isSingle,
   hoverState,
   activeImageId,
   groupId,
@@ -36,12 +36,16 @@ const ImageGridItem = ({
   const imageHasMoved = useRef(false)
 
   useEffect(() => {
-    setTop((prev) => (imageHasMoved.current || !isSingle ? prev + position.y : gridPosition.y))
-  }, [gridPosition.y, position.y, isSingle])
+    setTop((prev) => {
+      return imageHasMoved.current ? prev + position.y : getTopPosition(gridPosition.y, index)
+    })
+  }, [gridPosition.y, position.y, index])
 
   useEffect(() => {
-    setLeft((prev) => (imageHasMoved.current || !isSingle ? prev + position.x : gridPosition.x))
-  }, [gridPosition.x, position.x, isSingle])
+    setLeft((prev) => {
+      return imageHasMoved.current ? prev + position.x : getLeftPosition(gridPosition.x, index)
+    })
+  }, [gridPosition.x, position.x, index])
 
   const handleStopPosition = (position: { x: number; y: number }) => {
     setPosition(position)
@@ -51,7 +55,7 @@ const ImageGridItem = ({
 
   return (
     <div
-      className={`w-[180px] h-[180px] ${isSingle ? 'absolute' : 'relative [&:nth-child(5n+1)]:col-start-2 [&:nth-child(5n+1)]:col-span-2 [&:nth-child(5n+2)]:col-start-1 [&:nth-child(5n+3)]:col-start-2 [&:nth-child(5n+4)]:col-start-3 [&:nth-child(5n)]:col-start-2 [&:nth-child(5n)]:col-span-1'} ${hoverState.hover && index === hoverState.index ? 'z-50' : 'z-0'}`}
+      className={`absolute w-[180px] h-[180px] ${hoverState.hover && index === hoverState.index ? 'z-50' : 'z-0'}`}
       style={{
         top: `${top}px`,
         left: `${left}px`,
